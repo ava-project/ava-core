@@ -6,7 +6,7 @@ RM		=	rm -fr
 
 NAME		=	test
 
-SRC		=	test.cpp	\
+SRC		=	continuous.cpp	\
 
 OBJ_DIR		=	obj/
 
@@ -53,9 +53,8 @@ $(OBJ_DIR)%.o	:	$(patsubst %.cpp, ${SRC_DIR}%.cpp, %.cpp)
 
 $(NAME)	:	$(OBJS)
 			$(CC) $(OBJS) -o $(NAME) $(LFLAGS)
-
+			@echo "You have to enter this command: export LD_LIBRARY_PATH=/usr/local/lib"
 all		:
-			export LD_LIBRARY_PATH=/usr/local/lib
 			@$(MAKE) --no-print-directory $(NAME)
 
 clean		:
