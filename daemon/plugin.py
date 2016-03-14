@@ -4,6 +4,7 @@ import socket
 import time
 from threading import Thread, RLock
 from os import unlink
+from subprocess import Popen, PIPE
 import os.path
 
 """
@@ -45,7 +46,7 @@ class Plugin():
         sock.listen(1)
         connection, client_address = sock.accept()
 
-        print "Connection accepted from %s" % client_address
+        # print "Connection accepted from %s" % client_address
 
         while True:
             data = connection.recv(50)
@@ -81,8 +82,14 @@ class Plugin():
 Use the keywork 'with' to ensure object destruction properly
 """
 
-with Plugin(["firefox", "google-chrome"]) as plugins:
+with Plugin(["Atom", "Firefow", "Google-Chrome", "Application Launcher", "Sublime Text"]) as plugins:
     while True:
-        time.sleep(1)
-        print "working..."
-        print plugins.isActive("firefox")
+        inp = raw_input('Tell me something to do: ')
+        ws = inp.split(' ')
+        if "exit" in ws:
+            break
+        if "google-chrome" in ws and plugins.isActive("Google-Chrome"):
+            process = Popen("google-chrome-stable", shell=True, stdout=PIPE)
+            process.wait()
+        else:
+            print "Unknown instruction"
