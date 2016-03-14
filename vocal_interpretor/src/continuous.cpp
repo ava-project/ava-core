@@ -95,6 +95,7 @@ static const arg_t cont_args_def[] = {
 static ps_decoder_t *ps;
 static cmd_ln_t *config;
 static FILE *rawfd;
+char *res;
 
 static void
 print_word_times()
@@ -148,6 +149,7 @@ recognize_from_file()
     int16 adbuf[2048];
     const char *fname;
     const char *hyp;
+    static int st = 0;
     int32 k;
     uint8 utt_started, in_speech;
     int32 print_times = cmd_ln_boolean_r(config, "-time");
@@ -182,7 +184,10 @@ recognize_from_file()
             ps_end_utt(ps);
             hyp = ps_get_hyp(ps, NULL);
             if (hyp != NULL)
-        	printf("%s\n", hyp);
+            if (st == 0)
+                res = strdup(hyp);
+        	printf("Phrase may be : %s\n", hyp);
+            st++;
             if (print_times)
         	print_word_times();
 
@@ -194,7 +199,9 @@ recognize_from_file()
     if (utt_started) {
         hyp = ps_get_hyp(ps, NULL);
         if (hyp != NULL) {
-    	    printf("%s\n", hyp);
+            if (st == 0)
+                res = strdup(hyp);
+            printf("%s\n", hyp);
     	    if (print_times) {
     		print_word_times();
 	    }
@@ -276,6 +283,15 @@ recognize_from_microphone()
     ad_close(ad);
 }
 
+static void
+open_cmd()
+{
+    if (strstr(res, "list") != NULL)
+    {
+        system("ls");
+    }
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -301,7 +317,7 @@ main(int argc, char *argv[])
         return 1;
     }
 
-    E_INFO("%s COMPILED ON: %s, AT: %s\n\n", argv[0], __DATE__, __TIME__);
+//    E_INFO("%s COMPILED ON: %s, AT: %s\n\n", argv[0], __DATE__, __TIME__);
 
     if (cmd_ln_str_r(config, "-infile") != NULL) {
         recognize_from_file();
@@ -312,6 +328,9 @@ main(int argc, char *argv[])
     ps_free(ps);
     cmd_ln_free_r(config);
 
+    printf("\n\n\n\n\n\n\n\n\nCMD == %s\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", res);
+    open_cmd();
+    free(res);
     return 0;
 }
 
