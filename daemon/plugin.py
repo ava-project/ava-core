@@ -82,7 +82,7 @@ class Plugin():
 Use the keywork 'with' to ensure object destruction properly
 """
 
-with Plugin(["Atom", "Firefow", "Google-Chrome", "Application Launcher", "Sublime Text"]) as plugins:
+with Plugin(["Atom", "Firefox", "Google-Chrome", "Application Launcher", "Sublime Text"]) as plugins:
     while True:
         inp = raw_input('Tell me something to do: ')
         ws = inp.split(' ')
