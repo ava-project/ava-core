@@ -1,6 +1,6 @@
 // AVA
 // VOCAL INTERPRETOR
-// VICore.cpp
+// VICore.hpp
 
 #ifndef VICORE_HPP_
 # define VICORE_HPP_
