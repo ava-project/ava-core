@@ -8,6 +8,10 @@ VIAnswer::VIAnswer() {}
 
 VIAnswer::~VIAnswer() {}
 
-std::string  VIAnswer::getAnswer() const {}
+std::string  VIAnswer::getAnswer() const {
+  return answer;
+}
 
-void  VIAnswer::setAnswer(std::string) {}
+void  VIAnswer::setAnswer(std::string &newAnswer) {
+  answer = newAnswer;
+}

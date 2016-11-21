@@ -19,7 +19,7 @@ public:
 
   // VIAnswer routines
   void          setAnswer(std::string);
-  std::string   getAnswer() const;
+  std::string   &getAnswer() const;
 };
 
 #endif // !VIANSWER_HPP_

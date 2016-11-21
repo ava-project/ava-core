@@ -15,11 +15,12 @@ private:
 public:
   // Ctor & Dtor
   CmdDictionnary();
+  CmdDictionnary(std::string &);
   ~CmdDictionnary();
 
   // CmdDictionnary routines
-  bool                      loadDictionnary(std::string);
-  bool                      unloadDictionnary(std::string);
+  bool                      loadDictionnary(std::string &);
+  bool                      unloadDictionnary(std::string &);
   std::vector<std::string>  getCmds() const;
 };
 

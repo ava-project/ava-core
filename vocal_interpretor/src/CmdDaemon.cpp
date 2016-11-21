@@ -6,6 +6,10 @@ CmdDaemon::CmdDaemon() {}
 
 CmdDaemon::~CmdDaemon() {}
 
-std::string   CmdDaemon::getLastCommand() const {}
+std::string   CmdDaemon::getLastCommand() const {
+  return lastCommand;
+}
 
-void          CmdDaemon::setLastCommand() {}
+void          CmdDaemon::setLastCommand(std::string const &command) {
+  lastCommand = command;
+}

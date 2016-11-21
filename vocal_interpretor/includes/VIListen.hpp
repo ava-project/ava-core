@@ -13,6 +13,7 @@ private:
 public:
   // Ctor & Dtor
   VIListen();
+  VIListen(bool const);
   ~VIListen();
 
   // VIListen routines

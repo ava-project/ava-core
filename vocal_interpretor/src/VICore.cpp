@@ -4,15 +4,24 @@
 
 #include "VICore.hpp"
 
-VICore::VICore() {}
+VICore::VICore(CmdDaemon &daemon) : VI_cmd_daemon(daemon) {
+}
 
 VICore::~VICore() {}
 
 
-XCMUSphinx  VICore::getXCMUSphinx() {}
+XCMUSphinx  VICore::getXCMUSphinx() {
+  return sphinxLibrary;
+}
 
-VIListen    VICore::getVIListen() {}
+VIListen    VICore::getVIListen() {
+  return VI_listen;
+}
 
-VIAnswer    VICore::getVIAnswer() {}
+VIAnswer    VICore::getVIAnswer() {
+  return VI_answer;
+}
 
-CmdDaemon   VICore::getCmdDaemon() {}
+std::string   VICore::getCmdDaemon() {
+  return VI_cmd_daemon.getLastCommand();
+}

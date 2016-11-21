@@ -23,14 +23,14 @@ private:
 
 public:
   // Ctor & Dtor
-  VICore();
+  VICore(CmdDaemon &);
   ~VICore();
 
   // Core routines
   XCMUSphinx  getXCMUSphinx();
   VIListen    getVIListen();
   VIAnswer    getVIAnswer();
-  CmdDaemon   getCmdDaemon();
+  std::string getCmdDaemon();
 };
 
 #endif // !VICORE_HPP_
