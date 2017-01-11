@@ -19,6 +19,7 @@ class Plugin():
         self.socket_addr = "/tmp/ava_socket"
         self.plugins = dict()
         self.mutex = RLock()
+        self.th = None
         with self.mutex:
             for name in plugins:
                 self.plugins[name] = False
@@ -72,7 +73,7 @@ class Plugin():
                 return False
 
     def dump(self):
-        print self.plugins
+        print(self.plugins)
 
 """
 ====    EXAMPLE    ====
@@ -82,14 +83,14 @@ class Plugin():
 Use the keywork 'with' to ensure object destruction properly
 """
 
-with Plugin(["Atom", "Firefox", "Google-Chrome", "Application Launcher", "Sublime Text"]) as plugins:
-    while True:
-        inp = raw_input('Tell me something to do: ')
-        ws = inp.split(' ')
-        if "exit" in ws:
-            break
-        if "google-chrome" in ws and plugins.isActive("Google-Chrome"):
-            process = Popen("google-chrome-stable", shell=True, stdout=PIPE)
-            process.wait()
-        else:
-            print "Unknown instruction"
+# with Plugin(["Atom", "Firefox", "Google-Chrome", "Application Launcher", "Sublime Text"]) as plugins:
+#     while True:
+#         inp = raw_input('Tell me something to do: ')
+#         ws = inp.split(' ')
+#         if "exit" in ws:
+#             break
+#         if "google-chrome" in ws and plugins.isActive("Google-Chrome"):
+#             process = Popen("google-chrome-stable", shell=True, stdout=PIPE)
+#             process.wait()
+#         else:
+#             print "Unknown instruction"
