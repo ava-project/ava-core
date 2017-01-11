@@ -1,7 +1,8 @@
 from threading import Thread, Condition
 from collections import deque
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, STDOUT
 from Event import Event
+import sys
 
 class Daemon:
     def __init__(self):
@@ -22,6 +23,10 @@ class Daemon:
         event = self._event_queue.popleft()
         process = Popen(event.get_str(), shell=True, stdout=PIPE)
         process.wait()
+        out, err = process.communicate()
+        if err is not None:
+            print(err.decode(sys.stdout.encoding))
+        print(out.decode(sys.stdout.encoding))
 
     def run(self):
         self._is_running = True
