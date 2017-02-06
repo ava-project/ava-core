@@ -6,12 +6,12 @@ from Daemon import Daemon
 from Event import Event
 
 MODELDIR = "/usr/local/share/pocketsphinx/model"
-DATADIR = "../../../test/data"
+#DATADIR = "../../../test/data"
 
 config = Decoder.default_config()
 config.set_string('-hmm', path.join(MODELDIR, 'en-us/en-us'))
 config.set_string('-lm', path.join(MODELDIR, 'en-us/en-us.lm.bin'))
-config.set_string('-dict', path.join(MODELDIR, 'en-us/custom.dict'))
+config.set_string('-dict', path.join('static/custom.dict'))
 config.set_string('-logfn', '/dev/null')
 decoder = Decoder(config)
 
@@ -32,10 +32,10 @@ while True:
             if not in_speech_bf:
                 decoder.end_utt()
                 result = decoder.hyp().hypstr
-                print 'Result:[%s]' %result
-                daemon.add_event(Event(result))
+                print('Result:[%s]' %result)
+                daemon.add_event(Event(result, False, 0))
                 if result == 'yes':
-                      print 'Do whatever you want'
+                      print('Do whatever you want')
 
                 decoder.start_utt()
     else:

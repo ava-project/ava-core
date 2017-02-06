@@ -52,7 +52,7 @@ def main():
         if "exit" in inp:
             daemon.stop()
             break
-        daemon.add_event(Event(inp))
+        daemon.add_event(Event(inp, False, 0))
 
 if __name__ == "__main__":
     main()

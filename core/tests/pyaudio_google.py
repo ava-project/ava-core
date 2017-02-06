@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Requires PyAudio and PySpeech.
- 
+
 import speech_recognition as sr
 from Daemon import Daemon
 from Event import Event
@@ -10,7 +10,7 @@ r = sr.Recognizer()
 with sr.Microphone() as source:
     print("Say something!")
     audio = r.listen(source)
- 
+
 # Speech recognition using Google Speech Recognition
 try:
     # for testing purposes, we're just using the default API key
@@ -18,9 +18,9 @@ try:
     # instead of `r.recognize_google(audio)`
     inputRecognized = r.recognize_google(audio)
     print("You said: " + inputRecognized)
-    daemon = Daemon()
-    daemon.run()
-    daemon.add_event(Event(inputRecognized.lower()))
+    # daemon = Daemon()
+    # daemon.run()
+    # daemon.add_event(Event(inputRecognized.lower()))
 except sr.UnknownValueError:
     print("Google Speech Recognition could not understand audio")
 except sr.RequestError as e:
