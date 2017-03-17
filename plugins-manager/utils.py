@@ -1,4 +1,4 @@
-import os, shutil, json
+import os, shutil, json, zipfile
 
 # Format the output.
 def format_output(*args):
@@ -21,6 +21,22 @@ def remove_directory(path):
     else:
         raise
 
+
+# Unzip the file pointed by 'path' to extract its to content to the given destination
+# @params:
+#   - path: string (/path/to/the/file/to/unzip)
+#   - destination: string (/path/to/extract/the/zip)
+#
+# @behave: raise an error if either the path or the destination is invalid.
+def unzip(path, destination):
+    if os.path.isfile(path) == True and os.path.isdir(destination) == True:
+        zip_ref = zipfile.ZipFile(path, 'r')
+        zip_ref.extractall(destination)
+        zip_ref.close()
+    else:
+        raise
+
+
 # Parse a json file and store key and value into the given dictionary.
 # @params:
 #   - path: string (/path/to/the/directory/containing/the/json/file)
@@ -36,4 +52,4 @@ def parse_json_file_to_dictionary(path, dictionary):
                 for key, value in data.items():
                     dictionary[key] = value
     else:
-        print(format_output(__name__, parse_json_file_to_dictionary.__name__) + "error invalid path")
+        print(format_output(__name__, parse_json_file_to_dictionary.__name__) + "No such file or directory: " + path)
