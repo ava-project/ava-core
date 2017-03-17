@@ -4,4 +4,4 @@ if __name__ == "__main__":
     manager = plugins_manager("./dir_test")
     manager.load_plugins()
     print(manager.plugins_list)
-    manager.uninstall("test")
+    manager.uninstall("invalid_plugin") # should display an error message

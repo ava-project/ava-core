@@ -1,19 +1,14 @@
 import os, shutil, json
 
-# Handler for retrieving plugins names and files' extension
-# @params:
-#   - path: string  (/path/to/the/plugins/directory)
-#   - skip: string  (extension to skip i.e "json")
-#   - dictionary: the dictionary to fill.
-#
-# @behave: raise an error if the specified directory does not exist.
-def retrieve_plugins_name_and_files_extension(path, skip, dictionary):
-    if os.path.isdir(path) == False:
-        raise
-    for directory in os.listdir(path):
-        for file in os.listdir(path + '/' + directory):
-            if file.find(".") > 0 and file[file.find(".") + 1:] != skip:
-                dictionary[directory] = {'lang': file[file.find(".") + 1:]}
+# Format the output.
+def format_output(*args):
+    result = "["
+    for arg in args:
+        result += str(arg)
+        result += str(":")
+    result = result[:-1] + str("]: ")
+    return result
+
 
 # Handler for removing a directory and all its content
 # @param:
@@ -42,14 +37,3 @@ def parse_json_file_to_dictionary(path, dictionary):
                     dictionary[key] = value
     else:
         print(format_output(__name__, parse_json_file_to_dictionary.__name__) + "error invalid path")
-
-
-
-# Format the output.
-def format_output(*args):
-    result = "["
-    for arg in args:
-        result += str(arg)
-        result += str(":")
-    result = result[:-1] + str("]: ")
-    return result
