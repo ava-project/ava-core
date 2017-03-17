@@ -10,4 +10,4 @@ AVA plugins manager official repository
 
 ## Guidelines
 
-You will find the [guidelines](https://github.com/ava-project/ava-plugins-guidelines) to create your own plugin!
+You will find the [guidelines](https://github.com/ava-project/ava-plugins-guidelines/wiki) to create your own plugin!
