@@ -1,7 +1,5 @@
-# from utils import retrieve_plugins_name_and_files_extension
 import os
-from utils import format_output, remove_directory, unzip, parse_json_file_to_dictionary
-
+from avasdk.ioutils.utils import unzip, remove_directory, format_output, parse_json_file_to_dictionary
 
 class plugins_manager(object):
     "Handles AVA plugins"
