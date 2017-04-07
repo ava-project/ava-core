@@ -4,5 +4,5 @@ class Event:
         self._is_builtin = is_builtin
         self._nb_args = nb_args
 
-    def get_str(self):
-        return self._str
+    def get_cmd(self):
+        return self._cmd
