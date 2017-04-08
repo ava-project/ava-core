@@ -21,7 +21,7 @@ class Daemon:
 
     def __exec(self):
         event = self._event_queue.popleft()
-        process = Popen(event.get_str(), shell=True, stdout=PIPE)
+        process = Popen(event.get_cmd(), shell=True, stdout=PIPE)
         process.wait()
         out, err = process.communicate()
         if err is not None:
@@ -52,7 +52,7 @@ def main():
         if "exit" in inp:
             daemon.stop()
             break
-        daemon.add_event(Event(inp))
+        daemon.add_event(Event(inp, False, 0))
 
 if __name__ == "__main__":
     main()
