@@ -1,0 +1,16 @@
+{
+    "plugins": [
+        {
+            "id": 5,
+            "name": "Toto",
+            "version": "0.0.1",
+            "description": "What a plugin"
+        },
+        {
+            "id": 9,
+            "name": "Titi",
+            "version": "1.0.1",
+            "description": "Best plugin"
+        }
+    ]
+}

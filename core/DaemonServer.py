@@ -11,6 +11,7 @@ class DaemonServer():
     def __init__(self, base_url):
         self._is_running = False
         DaemonServer._base_url = base_url
+        DaemonServer._mock_url = "127.0.0.1:3000"
 
     @staticmethod
     @HTTPRequestHandler.get('/')
@@ -41,6 +42,54 @@ class DaemonServer():
     @staticmethod
     @HTTPRequestHandler.get('/me')
     def get_user_me(request):
+        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
+        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        return r
+
+    # todo
+    @staticmethod
+    @HTTPRequestHandler.get('/plugins')
+    def get_plugins(request):
+        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
+        r = requests.get(DaemonServer._mock_url + '/plugins', auth=auth)
+        return r
+
+    # todo
+    @staticmethod
+    @HTTPRequestHandler.get('/plugins/:id')
+    def get_plugin(request):
+        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
+        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        return r
+
+    # todo
+    @staticmethod
+    @HTTPRequestHandler.get('/plugins/:id/install')
+    def get_install_plugin(request):
+        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
+        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        return r
+
+    # todo
+    @staticmethod
+    @HTTPRequestHandler.delete('/plugins/:id/install')
+    def delete_uninstall_plugin(request):
+        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
+        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        return r
+
+    # todo
+    @staticmethod
+    @HTTPRequestHandler.get('/plugins/:id/enable')
+    def get_enable_plugin(request):
+        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
+        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        return r
+
+    # todo
+    @staticmethod
+    @HTTPRequestHandler.get('/plugins/:id/disable')
+    def get_disable_plugin(request):
         auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
         r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
         return r
