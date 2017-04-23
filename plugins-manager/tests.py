@@ -9,4 +9,5 @@ if __name__ == "__main__":
     print("### DEBUG ###")
     manager.install("./dir_test/atom.zip")
     print(manager.plugins_list['atom'])
+    manager.run("atom", "test")
     manager.uninstall("atom")

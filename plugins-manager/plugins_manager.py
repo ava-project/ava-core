@@ -71,3 +71,45 @@ class plugins_manager(object):
             return
 
         self.plugins_list.pop(plugin, None)
+
+
+
+    #
+    #
+    #
+    def handle_cpp(self, command):
+        print("CPP " + command)
+        return True
+
+    #
+    #
+    #
+    def handle_go(self, command):
+        print("Go " + command)
+        return True
+
+
+    #
+    #
+    #
+    def handle_python(self, command):
+        print("PYTHON " + command)
+        return True
+
+
+
+    #
+    #
+    #
+    def run(self, plugin, command):
+        if self.plugins_list.get(plugin) is None:
+            return False
+
+        lang = self.plugins_list[plugin]['lang']
+
+        switcher = {
+            "cpp": self.handle_cpp,
+            "go": self.handle_go,
+        }.get(lang, self.handle_python)(command)
+
+        return switcher
