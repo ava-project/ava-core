@@ -1,0 +1,21 @@
+{
+  "name":"git",
+  "description": "Tool to push/pusll faster to a git repository",
+  "version": "0.0.1",
+  "author": "tommy",
+  "commands": [
+    {
+      "name": "push",
+      "phonetic": "P OU CHE",
+      "exec": "git.py"
+    },
+    {
+      "name": "pull",
+      "phonetic": "P OU LE",
+      "exec": "git.py"
+    }
+  ],
+  "options": {
+    "branch": "master"
+  }
+}
