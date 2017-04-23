@@ -1,4 +1,5 @@
 import os
+from avasdk.ioutils.exceptions import RuntimeError
 from avasdk.ioutils.utils import unzip, remove_directory, format_output, parse_json_file_to_dictionary
 
 class plugins_manager(object):
@@ -18,7 +19,8 @@ class plugins_manager(object):
     # @behave: raise an error if the specified directory does not exist.
     def retrieve_plugins_name_and_files_extension(self, skip):
         if os.path.isdir(self.path) == False:
-            raise
+            raise RuntimeError(__name__, self.retrieve_plugins_name_and_files_extension.__name__,'Invalid path to the plugins directory.')
+
         for directory in os.listdir(self.path):
             if os.path.isdir(self.path + '/' + directory) == True:
                 for file in os.listdir(self.path + '/' + directory):
@@ -29,27 +31,33 @@ class plugins_manager(object):
     # Run the 'plugins' directory and list all plugins name as well as provided
     # files' extension.
     def load_plugins(self):
+        self.plugins_list.clear()
+
         try:
             self.retrieve_plugins_name_and_files_extension("json")
-        except:
-            print(format_output(__name__, self.load_plugins.__name__) + "invalid path to the plugins' directory")
 
-        for key, value in self.plugins_list.items():
-            parse_json_file_to_dictionary(self.path + '/' + key, self.plugins_list[key])
+        except RuntimeError as err:
+            print(format_output(err.args[0], err.args[1]), err.args[2])
+
+        try:
+            for key, value in self.plugins_list.items():
+                parse_json_file_to_dictionary(self.path + '/' + key, self.plugins_list[key])
+
+        except RuntimeError as err:
+            print(format_output(err.args[0], err.args[1]), err.args[2])
 
 
     # Install a plugin from the given zip file by unziping and copying its content to the plugins' directory
     # @param: string (/path/to/the/zip/file)
     #
-    # @behave: raise an error if the object pointer by 'path' is not a file.
+    # @behave: raise an error if the object pointed by 'path' is not a valid zip file.
     def install(self, path):
-        if os.path.isfile(path) == True:
-            try:
-                unzip(path, self.path)
-            except:
-                print(format_output(__name__, self.install.__name__) + "error while unziping " + path)
-        else:
-            print(format_output(__name__, self.install.__name__) + "No such file or directory: " + path)
+        try:
+            unzip(path, self.path)
+            self.load_plugins()
+
+        except RuntimeError as err:
+            print(format_output(err.args[0], err.args[1]), err.args[2])
 
 
     # Uninstall a plugin by removing the plugin's directory and all its content.
@@ -57,7 +65,9 @@ class plugins_manager(object):
     def uninstall(self, plugin):
         try:
             remove_directory(self.path + '/' + plugin)
-        except:
-            print(format_output(__name__, self.uninstall.__name__) + "Specified plugin doesn't exist [" + plugin + "]")
+
+        except RuntimeError as err:
+            print(format_output(err.args[0], err.args[1]), err.args[2])
             return
+
         self.plugins_list.pop(plugin, None)
