@@ -74,15 +74,15 @@ class plugins_manager(object):
         self.plugins_list.pop(plugin, None)
 
 
-
-    #
+    # C++ handler to execute plugin's features
     #
     #
     def handle_cpp(self, plugin, command):
         print("CPP: " + plugin + " - "  + command)
         return True
 
-    #
+
+    # Golang handler to execute plugin's features
     #
     #
     def handle_go(self, plugin, command):
@@ -90,22 +90,25 @@ class plugins_manager(object):
         return True
 
 
-    #
-    #
+    # Python handler to execute plugin's features
+    # @params:
+    #   - plugin: string (plugin name)
+    #   - command: string (the command to execute)
     #
     def handle_python(self, plugin, command):
-        name = "dir_test" + "." + plugin + "." + plugin
+        name = self.path + "." + plugin + "." + plugin
         module = importlib.import_module(name)
         class_ = getattr(module, plugin)
-        instance  = class_()
-        instance.handle(command)
+        class_().handle(command)
         return True
 
 
-
+    # aze
+    # @params:
+    #   - plugin: string (plugin name)
+    #   - command: string (the command to execute)
     #
-    #
-    #
+    # @return: Returns, False if there is no plugin named 'plugin', the according handler otherwise.
     def run(self, plugin, command):
         if self.plugins_list.get(plugin) is None:
             return False
