@@ -11,3 +11,4 @@ if __name__ == "__main__":
     print(manager.plugins_list['atom'])
     manager.run("atom", "test")
     manager.uninstall("atom")
+    manager.run("git", "log")

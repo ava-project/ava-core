@@ -1,4 +1,5 @@
 import os
+import importlib
 from avasdk.ioutils.exceptions import RuntimeError
 from avasdk.ioutils.utils import unzip, remove_directory, format_output, parse_json_file_to_dictionary
 
@@ -77,23 +78,27 @@ class plugins_manager(object):
     #
     #
     #
-    def handle_cpp(self, command):
-        print("CPP " + command)
+    def handle_cpp(self, plugin, command):
+        print("CPP: " + plugin + " - "  + command)
         return True
 
     #
     #
     #
-    def handle_go(self, command):
-        print("Go " + command)
+    def handle_go(self, plugin, command):
+        print("GO: " + plugin + " - "  + command)
         return True
 
 
     #
     #
     #
-    def handle_python(self, command):
-        print("PYTHON " + command)
+    def handle_python(self, plugin, command):
+        name = "dir_test" + "." + plugin + "." + plugin
+        module = importlib.import_module(name)
+        class_ = getattr(module, plugin)
+        instance  = class_()
+        instance.handle(command)
         return True
 
 
@@ -110,6 +115,6 @@ class plugins_manager(object):
         switcher = {
             "cpp": self.handle_cpp,
             "go": self.handle_go,
-        }.get(lang, self.handle_python)(command)
+        }.get(lang, self.handle_python)(plugin, command)
 
         return switcher
