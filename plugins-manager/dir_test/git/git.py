@@ -1,3 +1,5 @@
+import subprocess
+
 class git(object):
     "Git plugin"
 
@@ -8,10 +10,10 @@ class git(object):
         }
 
     def log(self):
-        print("PLUGIN: GIT - CMD = LOG !!!!")
+        subprocess.call(["git", "log"])
 
     def version(self):
-        print("PLUGIN: GIT - CMD = VERSION !!!!")
+        subprocess.call(["git", "version"])
 
 
     def get_commands(self):
