@@ -11,6 +11,7 @@ class plugins_manager(object):
     def __init__(self, path):
         self.path = path
         self.plugins_list = {}
+        self.plugins_running = {}
 
 
     # Handler for retrieving plugins names and files' extension
@@ -72,6 +73,7 @@ class plugins_manager(object):
             return
 
         self.plugins_list.pop(plugin, None)
+        self.plugins_running.pop(plugin, None)
 
 
     # C++ handler to execute plugin's features
@@ -79,7 +81,7 @@ class plugins_manager(object):
     #
     def handle_cpp(self, plugin, command):
         print("CPP: " + plugin + " - "  + command)
-        return True
+        return True, ""
 
 
     # Golang handler to execute plugin's features
@@ -87,7 +89,7 @@ class plugins_manager(object):
     #
     def handle_go(self, plugin, command):
         print("GO: " + plugin + " - "  + command)
-        return True
+        return True, ""
 
 
     # Python handler to execute plugin's features
@@ -95,23 +97,45 @@ class plugins_manager(object):
     #   - plugin: string (plugin name)
     #   - command: string (the command to execute)
     #
+    # @return:
+    #   Return a boolean and a string {Boolean, String}.
+    #         boolean: True of False whether an operation has been performed.
+    #         string: Status of the operation
+    #
     def handle_python(self, plugin, command):
-        name = self.path + "." + plugin + "." + plugin
-        module = importlib.import_module(name)
-        class_ = getattr(module, plugin)
-        class_().handle(command)
-        return True
+        if self.plugins_running.get(plugin) is None:
+            module = importlib.import_module(self.path + "." + plugin + "." + plugin)
+            plugin_instance = getattr(module, plugin)
+            self.plugins_running[plugin] = plugin_instance()
+            if self.plugins_running[plugin].get_commands().get(command) is None:
+                return False, "The plugin '" + plugin + "' cannot handle the following command: " + command
+            else:
+                self.plugins_running[plugin].get_commands()[command]()
+                return True, "Command correctly executed."
+        else:
+            if self.plugins_running[plugin].get_commands().get(command) is None:
+                return False, "The plugin '" + plugin + "' cannot handle the following command: " + command
+            else:
+                self.plugins_running[plugin].get_commands()[command]()
+                return True, "Command correctly executed."
 
 
-    # aze
+
+    # The main function of the plugins manager. If there is the corresponding
+    # plugin available, it performs the given command.
+    #
     # @params:
     #   - plugin: string (plugin name)
     #   - command: string (the command to execute)
     #
-    # @return: Returns, False if there is no plugin named 'plugin', the according handler otherwise.
+    # @return:
+    #   Return a boolean and a string {Boolean, String}.
+    #         boolean: True of False whether an operation has been performed.
+    #         string: Status of the operation
+
     def run(self, plugin, command):
         if self.plugins_list.get(plugin) is None:
-            return False
+            return False, "No plugin named '" + plugin + "' found."
 
         lang = self.plugins_list[plugin]['lang']
 

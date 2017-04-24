@@ -1,16 +1,18 @@
 class git(object):
     "Git plugin"
 
+    def __init__(self):
+        self.commands = {
+            'log': self.log,
+            'version': self.version,
+        }
+
     def log(self):
-        print("GIT LOG !!!!")
+        print("PLUGIN: GIT - CMD = LOG !!!!")
 
     def version(self):
-        print("GIT VERSION !!!!")
+        print("PLUGIN: GIT - CMD = VERSION !!!!")
 
-    def handle(self, command):
-        if command == "log":
-            self.log()
-        elif command == "version":
-            self.version()
-        else:
-            return
+
+    def get_commands(self):
+        return self.commands
