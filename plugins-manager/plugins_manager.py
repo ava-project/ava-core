@@ -104,15 +104,16 @@ class plugins_manager(object):
     #
     def handle_python(self, plugin, command):
         if self.plugins_running.get(plugin) is None:
-            module = importlib.import_module(self.path + "." + plugin + "." + plugin)
-            plugin_instance = getattr(module, plugin)
-            self.plugins_running[plugin] = plugin_instance()
+
+            self.plugins_running[plugin] = getattr(importlib.import_module("plugins." + plugin + "." + plugin), plugin)()
             if self.plugins_running[plugin].get_commands().get(command) is None:
                 return False, "The plugin '" + plugin + "' cannot handle the following command: " + command
             else:
                 self.plugins_running[plugin].get_commands()[command]()
                 return True, "Command correctly executed."
+
         else:
+
             if self.plugins_running[plugin].get_commands().get(command) is None:
                 return False, "The plugin '" + plugin + "' cannot handle the following command: " + command
             else:
@@ -132,16 +133,13 @@ class plugins_manager(object):
     #   Return a boolean and a string {Boolean, String}.
     #         boolean: True of False whether an operation has been performed.
     #         string: Status of the operation
-
     def run(self, plugin, command):
         if self.plugins_list.get(plugin) is None:
             return False, "No plugin named '" + plugin + "' found."
 
-        lang = self.plugins_list[plugin]['lang']
-
         switcher = {
             "cpp": self.handle_cpp,
             "go": self.handle_go,
-        }.get(lang, self.handle_python)(plugin, command)
+        }.get(self.plugins_list[plugin]['lang'], self.handle_python)(plugin, command)
 
         return switcher

@@ -6,13 +6,13 @@ if __name__ == "__main__":
     print(avasdk.__version__)
     # Instanciate the plugins manager
     # param: the path to the plugins repository
-    manager = plugins_manager("dir_test")
+    manager = plugins_manager("./plugins")
     # Load the plugins, this method must be called just after the instanciation
     # of the plugins manager
     manager.load_plugins()
     # Install a plugin by specifying the path towards the zipfile containing the plugin.
     # If an user wants to install a plugin through the CLI the same method must be used.
-    manager.install("./dir_test/atom.zip")
+    manager.install("./atom.zip")
     # Print cached information for a specific plugin
     print(manager.plugins_list['atom'])
     # Uninstall the specified plugin
