@@ -11,12 +11,12 @@ class DaemonServer():
     def __init__(self, base_url):
         self._is_running = False
         DaemonServer._base_url = base_url
-        DaemonServer._mock_url = "127.0.0.1:3000"
+        DaemonServer._mock_url = "http://127.0.0.1:3000"
 
     @staticmethod
     @HTTPRequestHandler.get('/')
-    def index():
-        return 'Get the home page my dear'
+    def index(request):
+        return requests.get(DaemonServer._mock_url + '/')
 
     @staticmethod
     @HTTPRequestHandler.post('/login')
@@ -46,36 +46,32 @@ class DaemonServer():
         r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
         return r
 
-    # todo
+    # mock
     @staticmethod
-    @HTTPRequestHandler.get('/plugins')
+    @HTTPRequestHandler.get('/plugins/')
     def get_plugins(request):
-        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
-        r = requests.get(DaemonServer._mock_url + '/plugins', auth=auth)
+        r = requests.get(DaemonServer._mock_url + '/plugins')
         return r
 
-    # todo
+    # mock
     @staticmethod
     @HTTPRequestHandler.get('/plugins/:id')
     def get_plugin(request):
-        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
-        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        r = requests.get(DaemonServer._mock_url + '/plugins/5')
         return r
 
-    # todo
+    # mock
     @staticmethod
     @HTTPRequestHandler.get('/plugins/:id/install')
     def get_install_plugin(request):
-        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
-        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        r = requests.get(DaemonServer._mock_url + '/plugins/2/install')
         return r
 
-    # todo
+    # mock
     @staticmethod
-    @HTTPRequestHandler.delete('/plugins/:id/install')
+    @HTTPRequestHandler.delete('/plugins/:id')
     def delete_uninstall_plugin(request):
-        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
-        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        r = requests.get(DaemonServer._mock_url + '/user/me.json')
         return r
 
     # todo
@@ -83,7 +79,7 @@ class DaemonServer():
     @HTTPRequestHandler.get('/plugins/:id/enable')
     def get_enable_plugin(request):
         auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
-        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        r = requests.get(DaemonServer._mock_url + '/user/me.json', auth=auth)
         return r
 
     # todo
@@ -91,7 +87,7 @@ class DaemonServer():
     @HTTPRequestHandler.get('/plugins/:id/disable')
     def get_disable_plugin(request):
         auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
-        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        r = requests.get(DaemonServer._mock_url + '/user/me.json', auth=auth)
         return r
 
     def run(self, adress='127.0.0.1', port=8001):

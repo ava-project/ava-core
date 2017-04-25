@@ -20,9 +20,3 @@ class UrlParse():
             if squerry[0] != ':' and squerry != oquerry:
                 return False
         return True
-
-a = UrlParse('/plugins/:id/enable')
-
-mydict = {'GET': {a: 'func', UrlParse('/plugins/hell'): 'func2'}}
-
-print(mydict['GET'].get('/plugins/hell'))
