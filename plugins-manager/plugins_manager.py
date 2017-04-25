@@ -1,5 +1,4 @@
-import os
-import importlib
+import os, importlib
 from avasdk.ioutils.exceptions import RuntimeError
 from avasdk.ioutils.utils import unzip, remove_directory, format_output, parse_json_file_to_dictionary
 
@@ -104,21 +103,14 @@ class plugins_manager(object):
     #
     def handle_python(self, plugin, command):
         if self.plugins_running.get(plugin) is None:
-
             self.plugins_running[plugin] = getattr(importlib.import_module("plugins." + plugin + "." + plugin), plugin)()
-            if self.plugins_running[plugin].get_commands().get(command) is None:
-                return False, "The plugin '" + plugin + "' cannot handle the following command: " + command
-            else:
-                self.plugins_running[plugin].get_commands()[command]()
-                return True, "Command correctly executed."
+
+        if self.plugins_running[plugin].get_commands().get(command) is None:
+            return False, "The plugin '" + plugin + "' cannot handle the following command: " + command
 
         else:
-
-            if self.plugins_running[plugin].get_commands().get(command) is None:
-                return False, "The plugin '" + plugin + "' cannot handle the following command: " + command
-            else:
-                self.plugins_running[plugin].get_commands()[command]()
-                return True, "Command correctly executed."
+            self.plugins_running[plugin].get_commands()[command]()
+            return True, "Command correctly executed."
 
 
 
@@ -133,6 +125,7 @@ class plugins_manager(object):
     #   Return a boolean and a string {Boolean, String}.
     #         boolean: True of False whether an operation has been performed.
     #         string: Status of the operation
+    #
     def run(self, plugin, command):
         if self.plugins_list.get(plugin) is None:
             return False, "No plugin named '" + plugin + "' found."

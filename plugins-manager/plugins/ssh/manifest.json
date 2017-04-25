@@ -1,6 +1,6 @@
 {
   "name":"ssh",
-  "description": "Tool to log faster to my on server",
+  "description": "Tool to log faster to my own server",
   "version": "0.0.1",
   "author": "tommy",
   "commands": [
