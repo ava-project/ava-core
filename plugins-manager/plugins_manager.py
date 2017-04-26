@@ -24,7 +24,6 @@ class plugins_manager(object):
 
         for directory in os.listdir(self.path):
             if self.plugins_list.get(directory) is not None:
-                print("CONTINUE FOR DIRECTORY: ", directory)
                 continue
             if os.path.isdir(self.path + '/' + directory) == True:
                 for file in os.listdir(self.path + '/' + directory):
@@ -35,8 +34,6 @@ class plugins_manager(object):
     # Run the 'plugins' directory and list all plugins name as well as provided
     # files' extension.
     def load_plugins(self):
-        # self.plugins_list.clear()
-
         try:
             self.retrieve_plugins_name_and_files_extension("json")
 
@@ -45,10 +42,8 @@ class plugins_manager(object):
 
         try:
             for key, value in self.plugins_list.items():
-                print("KEYYYYYYYYYY: ", key)
-                # if self.plugins_list.get(key) is None:
-                print(self.plugins_list[key])
-                print("\nLEN: ", len(self.plugins_list[key]), "\n")
+                if len(self.plugins_list[key]) > 1:
+                    continue
                 parse_json_file_to_dictionary(self.path + '/' + key, self.plugins_list[key])
 
         except RuntimeError as err:
