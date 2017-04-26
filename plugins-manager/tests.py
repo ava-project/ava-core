@@ -25,3 +25,13 @@ if __name__ == "__main__":
     print(result, status)
     (result, status) = manager.run("ssh", "connect")
     print(result, status)
+    #
+    # Examples:
+    #
+    # Below some examples of how the 'get_commands' method should be used.
+    test = manager.get_commands("toto")
+    if test is not None:
+        print(test)
+    test = manager.get_commands("git")
+    if test is not None:
+        print(test)

@@ -12,6 +12,7 @@ The plugins manager is built on the avasdk, you must install it before using the
 
 ```bash
    sudo python3 -m pip install --upgrade git+https://github.com/ava-project/sdk
+   sudo python3 -m pip install --upgrade git+https://github.com/snoack/python-goto
 ```
 
 ### Windows enivronment
@@ -20,6 +21,7 @@ The plugins manager is built on the avasdk, you must install it before using the
 
 ```bash
    python -m pip install --upgrade git+https://github.com/ava-project/sdk
+   python -m pip install --upgrade git+https://github.com/snoack/python-goto
 ```
 
 ## Guidelines

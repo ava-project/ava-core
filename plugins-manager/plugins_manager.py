@@ -1,4 +1,5 @@
 import os, importlib
+from goto import with_goto
 from avasdk.ioutils.exceptions import RuntimeError
 from avasdk.ioutils.utils import unzip, remove_directory, format_output, parse_json_file_to_dictionary
 
@@ -11,6 +12,7 @@ class plugins_manager(object):
         self.path = path
         self.plugins_list = {}
         self.plugins_running = {}
+        self.commands_for_a_specific_plugin = {}
 
 
     # Handler for retrieving plugins names and files' extension
@@ -117,7 +119,6 @@ class plugins_manager(object):
             return True, "Command correctly executed."
 
 
-
     # The main function of the plugins manager. If there is the corresponding
     # plugin available, it performs the given command.
     #
@@ -140,3 +141,31 @@ class plugins_manager(object):
         }.get(self.plugins_list[plugin]['lang'], self.handle_python)(plugin, command)
 
         return switcher
+
+
+    # Returns a dictionary containing the commands for the specified plugin. Data are kept in memory.
+    #
+    # @param:
+    #   -   plugin: string (the plugin name)
+    #
+    # @return:
+    #   Returns None if there is no such plugin, otherwise a dictionary formated as following:
+    #   {key, value} with key: string (the command name)
+    #                     value: sring (the phonetic equivalent of the command)
+    #
+    @with_goto
+    def get_commands(self, plugin):
+        if self.plugins_list.get(plugin) is None:
+            return None
+
+        if self.commands_for_a_specific_plugin.get('name') is not None:
+            if self.commands_for_a_specific_plugin['name'] == plugin:
+                goto .end
+
+        self.commands_for_a_specific_plugin.clear()
+        self.commands_for_a_specific_plugin['name'] = plugin
+        for cmd in self.plugins_list[plugin]['commands']:
+            self.commands_for_a_specific_plugin[cmd['name']] = cmd['phonetic']
+
+        label .end
+        return {x: self.commands_for_a_specific_plugin[x] for x in self.commands_for_a_specific_plugin if x not in "name"}
