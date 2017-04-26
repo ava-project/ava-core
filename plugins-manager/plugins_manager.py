@@ -20,9 +20,12 @@ class plugins_manager(object):
     # @behave: raise an error if the specified directory does not exist.
     def retrieve_plugins_name_and_files_extension(self, skip):
         if os.path.isdir(self.path) == False:
-            raise RuntimeError(__name__, self.retrieve_plugins_name_and_files_extension.__name__,'Invalid path to the plugins directory.')
+            raise RuntimeError(__name__, self.retrieve_plugins_name_and_files_extension.__name__, " Invalid path to the plugins' directory.")
 
         for directory in os.listdir(self.path):
+            if self.plugins_list.get(directory) is not None:
+                print("CONTINUE FOR DIRECTORY: ", directory)
+                continue
             if os.path.isdir(self.path + '/' + directory) == True:
                 for file in os.listdir(self.path + '/' + directory):
                     if file.find(".") > 0 and file[file.find(".") + 1:] != skip:
@@ -32,7 +35,7 @@ class plugins_manager(object):
     # Run the 'plugins' directory and list all plugins name as well as provided
     # files' extension.
     def load_plugins(self):
-        self.plugins_list.clear()
+        # self.plugins_list.clear()
 
         try:
             self.retrieve_plugins_name_and_files_extension("json")
@@ -42,6 +45,10 @@ class plugins_manager(object):
 
         try:
             for key, value in self.plugins_list.items():
+                print("KEYYYYYYYYYY: ", key)
+                # if self.plugins_list.get(key) is None:
+                print(self.plugins_list[key])
+                print("\nLEN: ", len(self.plugins_list[key]), "\n")
                 parse_json_file_to_dictionary(self.path + '/' + key, self.plugins_list[key])
 
         except RuntimeError as err:
@@ -71,8 +78,10 @@ class plugins_manager(object):
             print(format_output(err.args[0], err.args[1]), err.args[2])
             return
 
-        self.plugins_list.pop(plugin, None)
-        self.plugins_running.pop(plugin, None)
+        if self.plugins_list.get(plugin) is not None:
+            self.plugins_list.pop(plugin, None)
+        if self.plugins_running.get(plugin) is not None:
+            self.plugins_running.pop(plugin, None)
 
 
     # C++ handler to execute plugin's features
