@@ -8,11 +8,10 @@ The plugins manager is built on the avasdk, you must install it before using the
 
 ### Unix enivronment
 
-  - In order to install the avasdk, please run the following command:
+  - In order to install the dependencies, please run the following command:
 
 ```bash
-   sudo python3 -m pip install --upgrade git+https://github.com/ava-project/sdk
-   sudo python3 -m pip install --upgrade git+https://github.com/snoack/python-goto
+    sudo pip install -r requirements.txt
 ```
 
 ### Windows enivronment
@@ -20,8 +19,7 @@ The plugins manager is built on the avasdk, you must install it before using the
   - Run your shell as administrator and type the following command:
 
 ```bash
-   python -m pip install --upgrade git+https://github.com/ava-project/sdk
-   python -m pip install --upgrade git+https://github.com/snoack/python-goto
+    pip install -r requirements.txt
 ```
 
 ## Guidelines

@@ -1,0 +1,2 @@
+-e git://github.com/ava-project/sdk#egg=sdk
+-e git://github.com/snoack/python-goto#egg=python-goto
