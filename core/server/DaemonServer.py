@@ -1,6 +1,6 @@
 from http.server import HTTPServer
 from threading import Thread
-from HTTPRequestHandler import HTTPRequestHandler
+from server.HTTPRequestHandler import HTTPRequestHandler
 import requests
 
 class DaemonServer():

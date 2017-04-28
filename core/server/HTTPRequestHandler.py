@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import parse_qs
-from UrlPase import UrlParse
+from server.UrlPase import UrlParse
 
 class HTTPRequestHandler(BaseHTTPRequestHandler):
     """Handler that will be call by the DaemonServer to routes requests"""

@@ -1,6 +1,6 @@
 {
   "name":"git",
-  "description": "Tool to push/pusll faster to a git repository",
+  "description": "Tool to push/pull faster to a git repository",
   "version": "0.0.1",
   "author": "tommy",
   "commands": [

@@ -1,5 +1,5 @@
-from Daemon import Daemon
-from Event import Event
+from demo.Daemon import Daemon
+from demo.Event import Event
 
 def main():
     print('Launching AVA...')

@@ -1,0 +1,1 @@
+-e git://github.com/ava-project/sdk#egg=sdk

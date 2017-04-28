@@ -2,7 +2,7 @@ from threading import Thread, Condition
 from collections import deque
 from subprocess import Popen, PIPE
 import sys
-from DaemonServer import DaemonServer
+from server.DaemonServer import DaemonServer
 
 class Daemon:
     def __init__(self):
