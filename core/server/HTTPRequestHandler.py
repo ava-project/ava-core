@@ -56,3 +56,6 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         data = self.rfile.read(content_length).decode('utf-8')
         self.fields = parse_qs(data)
         self.__match('POST')
+
+    def do_DELETE(self):
+        self.__match('DELETE')
