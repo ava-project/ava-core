@@ -44,6 +44,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         routes_method = self.routes[request_method]
         for route in routes_method:
             if route == path:
+                self.url_vars = route.get_url_var(path)
                 return routes_method[route]
         return None
 

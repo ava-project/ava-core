@@ -1,11 +1,3 @@
 {
-    "shortcut": {
-
-    },
-    "input": {
-
-    },
-    "output": {
-
-    },
+    "API_addr": "http://163.5.84.224:80"
 }

@@ -1,4 +1,5 @@
 from http.server import HTTPServer
+from threading import Thread
 from HTTPRequestHandler import HTTPRequestHandler
 import requests
 
@@ -10,6 +11,8 @@ class DaemonServer():
 
     def __init__(self, base_url):
         self._is_running = False
+        self._httpd = None
+        self._th = None
         DaemonServer._base_url = base_url
         DaemonServer._mock_url = "http://127.0.0.1:3000"
 
@@ -57,44 +60,50 @@ class DaemonServer():
     @staticmethod
     @HTTPRequestHandler.get('/plugins/:id')
     def get_plugin(request):
-        r = requests.get(DaemonServer._mock_url + '/plugins/5')
+        r = requests.get(DaemonServer._mock_url + '/plugins/' + request.url_vars['id'])
         return r
 
     # mock
     @staticmethod
     @HTTPRequestHandler.get('/plugins/:id/install')
     def get_install_plugin(request):
-        r = requests.get(DaemonServer._mock_url + '/plugins/2/install')
+        r = requests.Response()
+        r.status_code = 200
         return r
 
     # mock
     @staticmethod
     @HTTPRequestHandler.delete('/plugins/:id')
     def delete_uninstall_plugin(request):
-        r = requests.get(DaemonServer._mock_url + '/user/me.json')
+        r = requests.Response()
+        r.status_code = 200
         return r
 
-    # todo
+    # mock
     @staticmethod
     @HTTPRequestHandler.get('/plugins/:id/enable')
     def get_enable_plugin(request):
-        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
-        r = requests.get(DaemonServer._mock_url + '/user/me.json', auth=auth)
+        r = requests.Response()
+        r.status_code = 200
         return r
 
-    # todo
+    # mock
     @staticmethod
     @HTTPRequestHandler.get('/plugins/:id/disable')
     def get_disable_plugin(request):
-        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
-        r = requests.get(DaemonServer._mock_url + '/user/me.json', auth=auth)
+        r = requests.Response()
+        r.status_code = 200
         return r
 
     def run(self, adress='127.0.0.1', port=8001):
-        httpd = HTTPServer((adress, port), HTTPRequestHandler)
+        self._httpd = HTTPServer((adress, port), HTTPRequestHandler)
         self._is_running = True
-        httpd.serve_forever()
+        self._th = Thread(None, self._httpd.serve_forever)
+        self._th.start()
+        print('DaemonServer is listening on %s:%d' % (adress, port))
 
-if __name__ == '__main__':
-    d = DaemonServer("http://163.5.84.224:80")
-    d.run()
+    def stop(self):
+        print('Stopping the DaemonServer...')
+        self._httpd.shutdown()
+        self._th.join()
+        self._is_running = False
