@@ -9,7 +9,10 @@ if __name__ == "__main__":
     #
     # manager.install("./demo/ssh.zip")
 
+    #
     print('\n', manager.plugins_list['git'], '\n')
+
+    #
     test = manager.get_commands("git")
     if test is not None:
         print('\n', test, '\n')
