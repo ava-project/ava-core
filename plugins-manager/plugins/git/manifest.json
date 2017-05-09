@@ -6,12 +6,22 @@
   "commands": [
     {
       "name": "push",
-      "phonetic": "P OU CHE",
+      "phonetic": "P UH Ch",
       "exec": "git.py"
     },
     {
       "name": "pull",
-      "phonetic": "P OU LE",
+      "phonetic": "P OO LEH",
+      "exec": "git.py"
+    },
+    {
+      "name": "version",
+      "phonetic": "V ERH SI ON",
+      "exec": "git.py"
+    },
+    {
+      "name": "log",
+      "phonetic": "L UHG",
       "exec": "git.py"
     }
   ],

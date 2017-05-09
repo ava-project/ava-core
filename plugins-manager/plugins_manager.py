@@ -7,15 +7,20 @@ class plugins_manager(object):
 
     def __init__(self, path):
         """
-        @param: string (/path/to/the/plugins/directory)
+        Initializer
+            @param:
+                - string (/path/to/the/plugins/directory)
         """
         self.path = path
         self.plugins_list = {}
         self.plugins_running = {}
         self.commands_for_a_specific_plugin = {}
+        self.load_plugins()
 
 
-
+    #
+    #  Internal feature
+    #
     def retrieve_plugins_name_and_files_extension(self, skip):
         """
         Handler for retrieving plugins names and files' extension
@@ -36,7 +41,6 @@ class plugins_manager(object):
                         self.plugins_list[directory] = {'lang': file[file.find(".") + 1:]}
 
 
-    #
     def load_plugins(self):
         """
         Loads every plugin and caches the data.
@@ -57,6 +61,9 @@ class plugins_manager(object):
             print(format_output(err.args[0], err.args[1]), err.args[2])
 
 
+    #
+    # Plugins handling
+    #
     def install(self, path):
         """
         Install a plugin from the given zip file by unziping and copying its content to the plugins' directory
@@ -93,6 +100,46 @@ class plugins_manager(object):
             self.plugins_running.pop(plugin, None)
 
 
+    def extract_commands(self, skip):
+        """
+        Extracts each command name and its phonetic equivalent for a specific plugin.
+
+            @return:
+                Returns a dictionary formated as following {key, value} with:
+                    - key: string (the commmand name)
+                    - value: string (phonetic equivalent)
+        """
+        return {x: self.commands_for_a_specific_plugin[x] for x in self.commands_for_a_specific_plugin if x not in skip}
+
+
+    def get_commands(self, plugin):
+        """
+        Returns a dictionary containing the commands for the specified plugin. Data are kept in memory.
+
+            @param:
+                -   plugin: string (the plugin name)
+
+            @return:
+                Returns None if there is no such plugin, otherwise a dictionary formated as following:
+                {key, value} with key: string (the command name)
+                                value: sring (the phonetic equivalent of the command)
+        """
+        if self.plugins_list.get(plugin) is None:
+            return None
+
+        if self.commands_for_a_specific_plugin.get('name') is not None and self.commands_for_a_specific_plugin['name'] == plugin:
+                return self.extract_commands("name")
+
+        self.commands_for_a_specific_plugin.clear()
+        self.commands_for_a_specific_plugin['name'] = plugin
+        for cmd in self.plugins_list[plugin]['commands']:
+            self.commands_for_a_specific_plugin[cmd['name']] = cmd['phonetic']
+        return self.extract_commands("name")
+
+
+    #
+    # Execution handling
+    #
     def handle_cpp(self, plugin, command):
         """ C++ handler to execute plugin's features """
         print("CPP: " + plugin + " - "  + command)
@@ -152,41 +199,3 @@ class plugins_manager(object):
         }.get(self.plugins_list[plugin]['lang'], self.handle_python)(plugin, command)
 
         return switcher
-
-
-
-    def extract_commands(self, skip):
-        """
-        Extracts each command name and its phonetic equivalent for a specific plugin.
-
-            @return:
-                Returns a dictionary formated as following {key, value} with:
-                    - key: string (the commmand name)
-                    - value: string (phonetic equivalent)
-        """
-        return {x: self.commands_for_a_specific_plugin[x] for x in self.commands_for_a_specific_plugin if x not in skip}
-
-
-    def get_commands(self, plugin):
-        """
-        Returns a dictionary containing the commands for the specified plugin. Data are kept in memory.
-
-            @param:
-                -   plugin: string (the plugin name)
-
-            @return:
-                Returns None if there is no such plugin, otherwise a dictionary formated as following:
-                {key, value} with key: string (the command name)
-                                value: sring (the phonetic equivalent of the command)
-        """
-        if self.plugins_list.get(plugin) is None:
-            return None
-
-        if self.commands_for_a_specific_plugin.get('name') is not None and self.commands_for_a_specific_plugin['name'] == plugin:
-                return self.extract_commands("name")
-
-        self.commands_for_a_specific_plugin.clear()
-        self.commands_for_a_specific_plugin['name'] = plugin
-        for cmd in self.plugins_list[plugin]['commands']:
-            self.commands_for_a_specific_plugin[cmd['name']] = cmd['phonetic']
-        return self.extract_commands("name")
