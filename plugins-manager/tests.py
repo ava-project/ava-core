@@ -25,3 +25,7 @@ if __name__ == "__main__":
 
     # Uninstall the specified plugin.
     manager.uninstall("ssh")
+
+
+    result = manager.disable_plugin("git")
+    print(result)

@@ -14,12 +14,13 @@ class plugins_manager(object):
         self.path = path
         self.plugins_list = {}
         self.plugins_running = {}
+        self.plugins_disabled = []
         self.commands_for_a_specific_plugin = {}
         self.load_plugins()
 
 
     #
-    #  Internal feature
+    #  Internal features
     #
     def retrieve_plugins_name_and_files_extension(self, skip):
         """
@@ -98,6 +99,28 @@ class plugins_manager(object):
             self.plugins_list.pop(plugin, None)
         if self.plugins_running.get(plugin) is not None:
             self.plugins_running.pop(plugin, None)
+
+
+    def disable_plugin(self, plugin):
+        """
+        Disables the specified plugin
+
+            @param:
+                - plugin: string(the plugin name)
+        """
+
+        if self.plugins_list.get(plugin) is not None:
+            if self.plugins_running.get(plugin) is not None:
+                self.plugins_running.pop(plugin, None)
+            if plugin in self.plugins_disabled:
+                pass
+            else:
+                self.plugins_disabled.append(plugin)
+            return True
+
+        return False
+
+
 
 
     def extract_commands(self, skip):
