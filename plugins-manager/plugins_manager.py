@@ -101,7 +101,24 @@ class plugins_manager(object):
             self.plugins_running.pop(plugin, None)
 
 
-    def disable_plugin(self, plugin):
+    def enable(self, plugin):
+        """
+        Enables the specified plugin
+
+            @param:
+                - plugin: string (the plugin name)
+
+            @behave:
+                - Plugins are enabled by default. Use this method if you want to
+                enable a plugin which has been disabled by the 'disable' method.
+        """
+
+        if plugin in self.plugins_disabled:
+            self.plugins_disabled.remove(plugin)
+        return True
+
+
+    def disable(self, plugin):
         """
         Disables the specified plugin
 
@@ -215,6 +232,9 @@ class plugins_manager(object):
         """
         if self.plugins_list.get(plugin) is None:
             return False, "No plugin named '" + plugin + "' found."
+
+        if plugin in self.plugins_disabled:
+            return False, "The plugin named '" + plugin + "' is currently disabled."
 
         switcher = {
             "cpp": self.handle_cpp,
