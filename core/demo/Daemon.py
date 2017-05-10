@@ -3,6 +3,8 @@ from collections import deque
 from subprocess import Popen, PIPE
 import sys
 from server.DaemonServer import DaemonServer
+from plugins_manager.plugins_manager import plugins_manager
+from demo.ConfigLoader import ConfigLoader
 
 class Daemon:
     def __init__(self):
@@ -10,7 +12,10 @@ class Daemon:
         self._th = Thread(None, self.__run)
         self._cv = Condition()
         self._is_running = False
-        self._ds = DaemonServer("http://163.5.84.224:80")
+        self._config = ConfigLoader("../")
+        self._config.load('settings.json')
+        self._ds = DaemonServer(self, self._config.get('API_address'))
+        self._plugin_manager = plugins_manager(self._config.get('plugin_folder_install'))
 
     def __run(self):
         while self._is_running:
@@ -46,3 +51,15 @@ class Daemon:
         self._event_queue.append(event)
         self._cv.notify()
         self._cv.release()
+
+    def install_plugin(self, file_path):
+        self._plugin_manager.install(file_path)
+
+    def uninstall_plugin(self, plugin_name):
+        self._plugin_manager.uninstall(plugin_name)
+
+    def enable_plugin(self, plugin_name):
+        self._plugin_manager.enable(plugin_name)
+
+    def disable_plugin(self, plugin_name):
+        self._plugin_manager.disable(plugin_name)

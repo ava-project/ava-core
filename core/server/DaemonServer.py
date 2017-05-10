@@ -9,10 +9,11 @@ class DaemonServer():
     _user = {}
     _is_log = False
 
-    def __init__(self, base_url):
+    def __init__(self, daemon, base_url):
         self._is_running = False
         self._httpd = None
         self._th = None
+        DaemonServer._daemon = daemon
         DaemonServer._base_url = base_url
         DaemonServer._mock_url = "http://127.0.0.1:3000"
 
@@ -25,75 +26,99 @@ class DaemonServer():
     @HTTPRequestHandler.post('/login')
     def post_user_login(request):
         data = {'email': request.fields['email'], 'password': request.fields['password']}
-        r = requests.post(DaemonServer._base_url + '/user/login.json', data=data)
-        if r.ok:
+        res = requests.post(DaemonServer._base_url + '/user/login.json', data=data)
+        if res.ok:
             DaemonServer._is_log = True
-            DaemonServer._user['_token'] = r.json()['data']
+            DaemonServer._user['_token'] = res.json()['data']
             DaemonServer._user['_email'] = request.fields['email'][0]
-        return r
+        return res
 
     @staticmethod
     @HTTPRequestHandler.get('/logout')
     def get_user_logout(request):
         auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
-        r = requests.get(DaemonServer._base_url + '/user/logout.json', auth=auth)
-        if r.ok:
+        res = requests.get(DaemonServer._base_url + '/user/logout.json', auth=auth)
+        if res.ok:
             DaemonServer._is_log = False
             DaemonServer._token = None
-        return r
+        return res
 
     @staticmethod
     @HTTPRequestHandler.get('/me')
     def get_user_me(request):
         auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
-        r = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
-        return r
+        res = requests.get(DaemonServer._base_url + '/user/me.json', auth=auth)
+        return res
 
     # mock
     @staticmethod
     @HTTPRequestHandler.get('/plugins/')
     def get_plugins(request):
-        r = requests.get(DaemonServer._mock_url + '/plugins')
-        return r
+        res = requests.get(DaemonServer._mock_url + '/plugins')
+        return res
 
     # mock
     @staticmethod
     @HTTPRequestHandler.get('/plugins/:id')
     def get_plugin(request):
-        r = requests.get(DaemonServer._mock_url + '/plugins/' + request.url_vars['id'])
-        return r
+        res = requests.get(DaemonServer._mock_url + '/plugins/' + request.url_vars['id'])
+        return res
 
-    # mock
     @staticmethod
-    @HTTPRequestHandler.get('/plugins/:id/install')
+    @HTTPRequestHandler.get('/plugins/:author/:plugin_name/download')
+    def get_download_plugin(request):
+        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
+        res = requests.get(DaemonServer._base_url + '/plugins/' + request.url_vars['author'] + '/' + request.url_vars['plugin_name'] + '/download', auth=auth)
+        if res.ok:
+            download_url = res.json()['url']
+            download_folder = DaemonServer._daemon._config.get('plugin_folder_download') + '/'
+            DaemonServer.__download_file(download_folder + request.url_vars['plugin_name'], download_url, extension='.zip')
+        return res
+
+    @staticmethod
+    @HTTPRequestHandler.get('/plugins/:plugin_name/install')
     def get_install_plugin(request):
-        r = requests.Response()
-        r.status_code = 200
-        return r
+        plugin_path = '../plugins_manager/demo/' + request.url_vars['plugin_name'] + '.zip'
+        DaemonServer._daemon.install_plugin(plugin_path)
+        res = requests.Response()
+        res.status_code = 200
+        return res
 
-    # mock
     @staticmethod
-    @HTTPRequestHandler.delete('/plugins/:id')
+    @HTTPRequestHandler.delete('/plugins/:plugin_name')
     def delete_uninstall_plugin(request):
-        r = requests.Response()
-        r.status_code = 200
-        return r
+        plugin_name = request.url_vars['plugin_name']
+        DaemonServer._daemon.uninstall_plugin(plugin_name)
+        res = requests.Response()
+        res.status_code = 200
+        return res
 
-    # mock
     @staticmethod
-    @HTTPRequestHandler.get('/plugins/:id/enable')
+    @HTTPRequestHandler.get('/plugins/:plugin_name/enable')
     def get_enable_plugin(request):
-        r = requests.Response()
-        r.status_code = 200
-        return r
+        plugin_name = request.url_vars['plugin_name']
+        DaemonServer._daemon.enable_plugin(plugin_name)
+        res = requests.Response()
+        res.status_code = 200
+        return res
 
-    # mock
     @staticmethod
-    @HTTPRequestHandler.get('/plugins/:id/disable')
+    @HTTPRequestHandler.get('/plugins/:plugin_name/disable')
     def get_disable_plugin(request):
-        r = requests.Response()
-        r.status_code = 200
-        return r
+        plugin_name = request.url_vars['plugin_name']
+        DaemonServer._daemon.disable_plugin(plugin_name)
+        res = requests.Response()
+        res.status_code = 200
+        return res
+
+    @staticmethod
+    def __download_file(path, url, extension=''):
+        auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
+        res = requests.get(DaemonServer._base_url + url, auth=auth, stream=True)
+        with open(path + extension, 'wb') as dfile:
+            for chunk in res.iter_content(chunk_size=1024):
+                if chunk:
+                    dfile.write(chunk)
 
     def run(self, adress='127.0.0.1', port=8001):
         self._httpd = HTTPServer((adress, port), HTTPRequestHandler)

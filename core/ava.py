@@ -1,5 +1,8 @@
+import sys
+sys.path.append('C:\\Users\\jibb\\Documents\\AVA\\ava-core')
 from demo.Daemon import Daemon
 from demo.Event import Event
+
 
 def main():
     print('Launching AVA...')
