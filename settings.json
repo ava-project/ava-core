@@ -1,5 +1,5 @@
 {
-    "plugin_folder_download": "../plugins_manager/demo",
-    "plugin_folder_install": "../plugins_manager/plugins",
+    "plugin_folder_download": "./plugins_manager/packages",
+    "plugin_folder_install": "./plugins_manager/plugins",
     "API_address": "https://www.ava-project.com"
 }

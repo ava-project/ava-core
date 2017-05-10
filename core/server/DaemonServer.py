@@ -1,5 +1,5 @@
-from http.server import HTTPServer
 from threading import Thread
+from http.server import HTTPServer
 from server.HTTPRequestHandler import HTTPRequestHandler
 import requests
 

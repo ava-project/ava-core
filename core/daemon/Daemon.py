@@ -1,10 +1,10 @@
+import sys
 from threading import Thread, Condition
 from collections import deque
 from subprocess import Popen, PIPE
-import sys
 from server.DaemonServer import DaemonServer
 from plugins_manager.plugins_manager import plugins_manager
-from demo.ConfigLoader import ConfigLoader
+from daemon.ConfigLoader import ConfigLoader
 
 class Daemon:
     def __init__(self):
