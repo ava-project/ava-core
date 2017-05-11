@@ -113,6 +113,8 @@ class plugins_manager(object):
                 enable a plugin which has been disabled by the 'disable' method.
         """
 
+        if self.plugins_list.get(plugin) is None:
+            return False
         if plugin in self.plugins_disabled:
             self.plugins_disabled.remove(plugin)
         return True

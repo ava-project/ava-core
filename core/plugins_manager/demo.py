@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     # Install a specific plugin by specifying the path to the zipfile containing
     # the plugin's sources.
-    manager.install("./demo/ssh.zip")
+    manager.install("./packages/ssh.zip")
 
     # Print all data stored for a specific plugin.
     print(manager.plugins_list['git'], "\n")
@@ -38,10 +38,9 @@ if __name__ == "__main__":
     # Enabling/disabling a plugin.
     #
     #
-    # result = manager.disable(the_plugin_name)
+    # result = manager.disable("git")
     #   Returns true or false wether the plugin has been correctly disabled.
     #
     # Same behave for the 'enable' method:
     #
-    # result = manager.enable(the_plugin_name)
     #   Returns true or false wether the plugin has been correctly enabled.
