@@ -54,11 +54,11 @@ class Daemon(object):
         """
 #         event = self._event_queue.popleft()
 #         target = event.get_cmd().rsplit(' ');
-#         try :
-#             if len(target) >= 2 :
-#                 plugin_manager_result = self._plugin_manager.run(target[0], target[1:])
-#                 if plugin_manager_result[0] is False :
-#                     print(plugin_manager_result[1])
+        try :
+            if len(target) >= 2 :
+                plugin_manager_result = self._plugin_manager.run(target[0], target[1:])
+                if plugin_manager_result[0] is False :
+                    print(plugin_manager_result[1])
 #             else :
 #                 print(target);
 #                 target = self._fileCrawler.locateExecutablePath(event.get_cmd())
@@ -68,10 +68,10 @@ class Daemon(object):
 #                     process = Popen(target, shell=True, stdout=PIPE)
 #                     process.wait()
 #                     out, err = process.communicate()
-#         except RuntimeError as exec_error :
-#             print("Error on Plugin manager call : " + exec_error)
-#         except :
-#             print("Error on Plugin manager call : ")
+        except RuntimeError as exec_error :
+            print("Error on Plugin manager call : " + exec_error)
+        except :
+            print("Error on Plugin manager call : ")
 # #        if self._plugin_manager.run(event.get_cmd()) is False :
 #         #    #IF NO PLUGIN FOUND
 #         ## to be threaded
