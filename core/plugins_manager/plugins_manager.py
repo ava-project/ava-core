@@ -1,6 +1,6 @@
 import os, importlib
 from avasdk.plugins.ioutils.utils import *
-from avasdk.plugins.ioutils.exceptions import RuntimeError
+from avasdk.exceptions import RuntimeError
 
 class plugins_manager(object):
     """ AVA plugins-manager """
