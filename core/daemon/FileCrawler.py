@@ -34,7 +34,7 @@ class FileCrawler(object):
     def __AddCustomsPaths(self) :
         try:
             for entry in self._JSONData_file_preferences :
-                self.customPaths.append(entry);
+                self.customPaths.append(os.path.normpath(entry));
             # for entry in os.environ['PATH'].rsplit(';') :
             #     self.customPaths.append(entry);
         except:

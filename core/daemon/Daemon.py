@@ -32,8 +32,8 @@ class Daemon(object):
         self._config.load('settings.json')
         self._ds = DaemonServer(self, self._config.get('API_address'))
         self._fileCrawler = FileCrawler(self._config.get('FileCrawler_preferences'))
-#        self._plugin_manager = plugins_manager(os.path.join(os.path.realpath(os.getcwd()), self._config.get('plugin_folder_install')))
-        self._plugin_manager = plugins_manager(os.path.join(os.path.realpath(os.getcwd()), self._config.get('plugin_folder_install_windows')))
+        self._plugin_manager = plugins_manager( os.path.normpath(os.path.join(sys.path[1], self._config.get('plugin_folder_install'))))
+#        self._plugin_manager = plugins_manager(os.path.join(sys.path[1], self._config.get('plugin_folder_install_windows')))
 
     def __run(self):
         """

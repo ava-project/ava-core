@@ -1,6 +1,6 @@
 {
     "plugin_folder_download": "plugins_manager/packages",
-    "plugin_folder_install": "plugins_manager/plugins",
+    "plugin_folder_install": "core/plugins_manager/plugins",
     "plugin_folder_install_windows": "core\\plugins_manager\\plugins\\",
     "API_address": "https://www.ava-project.com",
     "Model_path": "/usr/local/share/pocketsphinx/model",
