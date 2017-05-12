@@ -207,7 +207,7 @@ class plugins_manager(object):
                     string: Status of the operation
         """
         if self.plugins_running.get(plugin) is None:
-            self.plugins_running[plugin] = getattr(importlib.import_module("plugins." + plugin + "." + plugin), plugin)()
+            self.plugins_running[plugin] = getattr(importlib.import_module("core.plugins_manager.plugins." + plugin + "." + plugin), plugin)()
 
         if self.plugins_running[plugin].get_commands().get(command) is None:
             return False, "The plugin '" + plugin + "' cannot handle the following command: " + command
