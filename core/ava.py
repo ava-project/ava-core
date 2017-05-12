@@ -1,7 +1,6 @@
 from daemon.Daemon import Daemon
 from daemon.Event import Event
 
-
 def main():
     print('Launching AVA...')
     daemon = Daemon()
@@ -21,4 +20,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
