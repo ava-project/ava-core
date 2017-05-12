@@ -6,7 +6,7 @@ import multiprocessing
 
 sys.path.append(os.path.join(os.getcwd(), "core"))
 from server.DaemonServer import DaemonServer
-from plugins_manager.plugins_manager import plugins_manager
+from plugins_manager.sources.plugins_manager import plugins_manager
 from daemon.ConfigLoader import ConfigLoader
 from daemon.FileCrawler import FileCrawler
 # from vocal_interpretor.STT_Engine import STT_Engine
@@ -33,7 +33,7 @@ class Daemon(object):
         self._ds = DaemonServer(self, self._config.get('API_address'))
         self._fileCrawler = FileCrawler(self._config.get('FileCrawler_preferences'))
         self._plugin_manager = plugins_manager( os.path.normpath(os.path.join(sys.path[1], self._config.get('plugin_folder_install'))))
-#        self._plugin_manager = plugins_manager(os.path.join(sys.path[1], self._config.get('plugin_folder_install_windows')))
+    #    self._plugin_manager = plugins_manager(os.path.join(sys.path[1], self._config.get('plugin_folder_install_windows')))
 
     def __run(self):
         """
@@ -52,11 +52,13 @@ class Daemon(object):
         Private method
         This method execute an event and remove it from the event queue
         """
-#         event = self._event_queue.popleft()
-#         target = event.get_cmd().rsplit(' ');
+
+        string = "git version"
+        # event = self._event_queue.popleft()
+        target = string.split(' ')
         try :
             if len(target) >= 2 :
-                plugin_manager_result = self._plugin_manager.run(target[0], target[1:])
+                plugin_manager_result = self._plugin_manager.run(target[0], target[1])
                 if plugin_manager_result[0] is False :
                     print(plugin_manager_result[1])
 #             else :
@@ -84,7 +86,8 @@ class Daemon(object):
         Launch the daemon (ready to process event) and the http server
         """
         self._is_running = True
-        self._th.start()
+        # self._th.start()
+        self.__exec()
         self._ds.run()
 
     def stop(self):
