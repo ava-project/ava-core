@@ -9,8 +9,10 @@ from server.DaemonServer import DaemonServer
 from plugins_manager.sources.plugins_manager import plugins_manager
 from daemon.ConfigLoader import ConfigLoader
 from daemon.FileCrawler import FileCrawler
-from vocal_interpretor.STT_Engine import STT_Engine
-from vocal_interpretor.TTS_Engine import TTS_Engine
+
+# TODO: Error during import
+# from vocal_interpretor.STT_Engine import STT_Engine
+# from vocal_interpretor.TTS_Engine import TTS_Engine
 
 class Daemon(object):
     """
@@ -33,11 +35,12 @@ class Daemon(object):
         self._ds = DaemonServer(self, self._config.get('API_address'))
         self._fileCrawler = FileCrawler(self._config.get('FileCrawler_preferences'))
         self._plugin_manager = plugins_manager( os.path.normpath(os.path.join(sys.path[1], self._config.get('plugin_folder_install'))))
-        self._builtin = ['install', 'uninstall', 'enable', 'disable']
+        self._builtins = ['install', 'uninstall', 'enable', 'disable']
 
-    #    self._plugin_manager = plugins_manager(os.path.join(sys.path[1], self._config.get('plugin_folder_install_windows')))
-
-    def check_builtin(self, target) :
+    def check_builtins(self, target) :
+        """
+        Builtins handler.
+        """
 
         if (target[0] == "install" and len(target) > 1) :
             self.install_plugin("./packages/" + target[1] + ".zip")
@@ -70,35 +73,29 @@ class Daemon(object):
         This method execute an event and remove it from the event queue
         """
 
-#        string = "git version"
         event = self._event_queue.popleft()
         target = event.get_cmd().split(' ')
         try :
-            if (target[0] in self._builtin) :
-                self.check_builtin(target)
-            else :
+            if target[0] in self._builtins :
+                self.check_builtins(target)
 
+            else :
                 if len(target) >= 2 :
                     plugin_manager_result = self._plugin_manager.run(target[0], str(' '.join(target[1:])))
                     if plugin_manager_result[0] is False :
                         print(plugin_manager_result[1])
                 else :
                     target = self._fileCrawler.locateExecutablePath(event.get_cmd())
-#                       print("[RESULT] === " + str(target));
                     if target is not False :
                         process = Popen(target, shell=True, stdout=PIPE)
                         process.wait()
                         out, err = process.communicate()
+
         except RuntimeError as exec_error :
             print("Error on Plugin manager call : " + exec_error)
         except BaseException as e:
             print("Standard Exception : " + str(e))
-# #        if self._plugin_manager.run(event.get_cmd()) is False :
-#         #    #IF NO PLUGIN FOUND
-#         ## to be threaded
-#         # if err is not None:
-#         #     print(err.decode(sys.stdout.encoding))
-#         # print(out.decode(sys.stdout.encoding))
+
 
     def run(self):
         """
@@ -106,7 +103,6 @@ class Daemon(object):
         """
         self._is_running = True
         self._th.start()
-#        self.__exec()
         self._ds.run()
 
     def stop(self):
