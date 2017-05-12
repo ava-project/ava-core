@@ -9,7 +9,7 @@ from server.DaemonServer import DaemonServer
 from plugins_manager.plugins_manager import plugins_manager
 from daemon.ConfigLoader import ConfigLoader
 from daemon.FileCrawler import FileCrawler
-# from vocal_interpretor.STT_Engine import STT_Engine
+from vocal_interpretor.STT_Engine import STT_Engine
 # from vocal_interpretor.TTS_Engine import TTS_Engine
 
 class Daemon(object):
@@ -52,11 +52,11 @@ class Daemon(object):
         Private method
         This method execute an event and remove it from the event queue
         """
-#         event = self._event_queue.popleft()
-#         target = event.get_cmd().rsplit(' ');
+        # event = self._event_queue.popleft()
+        # target = event.get_cmd().rsplit(' ');
         try :
             if len(target) >= 2 :
-                plugin_manager_result = self._plugin_manager.run(target[0], target[1:])
+                plugin_manager_result = self._plugin_manager.run(target[0], target[1])
                 if plugin_manager_result[0] is False :
                     print(plugin_manager_result[1])
 #             else :
@@ -70,8 +70,9 @@ class Daemon(object):
 #                     out, err = process.communicate()
         except RuntimeError as exec_error :
             print("Error on Plugin manager call : " + exec_error)
-        except :
-            print("Error on Plugin manager call : ")
+        except BaseException as e:
+            print("Standard Error on Plugin manager call")
+            print(e)
 # #        if self._plugin_manager.run(event.get_cmd()) is False :
 #         #    #IF NO PLUGIN FOUND
 #         ## to be threaded
@@ -84,7 +85,8 @@ class Daemon(object):
         Launch the daemon (ready to process event) and the http server
         """
         self._is_running = True
-        self._th.start()
+        # self._th.start()
+        self.__exec();
         self._ds.run()
 
     def stop(self):
