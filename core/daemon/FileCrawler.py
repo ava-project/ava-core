@@ -9,7 +9,6 @@ WINDOWS_TARGET_EXTENSION = "exe"
 
 #print(os.getenv('PATH'))
 
-
 class FileCrawler(object):
     """
            FileCrawler :
@@ -50,7 +49,7 @@ class FileCrawler(object):
                 result = self.__Crawldir(folder, TargetName, 0, -1);
             except :
                 print("UNEXPECTED Error");
-            if ( result != False) :
+            if result is not False :
                 return result;
         return result
 
@@ -100,17 +99,17 @@ class FileCrawler(object):
         #         # return fd;
         # return False;
 
-
-#   Search recursively for [targetName{.exe}] from [dirname] with a maximum depth of [depth]
-#       if it is likely the for the target to be found in current folder or subfolder,
-#       starts by looking for files, then by subfolders containing targetName in their name
-#       then trying toher subfolders until depth max is reached.
-
     def __EvalLocalFiles(self, dirname, targetName) :
+        """
+        Search recursively for [targetName{.exe}] from [dirname] with a maximum depth of [depth]
+        if it is likely the for the target to be found in current folder or subfolder,
+        starts by looking for files, then by subfolders containing targetName in their name
+        then trying toher subfolders until depth max is reached.
+        """
         result = False;
         for fileItem in os.listdir(dirname):
             result = self.__CertifyResult(fileItem, dirname, targetName)
-            if (result != False) :
+            if result is not False:
                 break;
         return result;
 
@@ -120,29 +119,32 @@ class FileCrawler(object):
             result = False;
             if (likelihood > LAMBDA) :
                 result = self.__EvalLocalFiles(dirname, targetName)
-                if ( result != False) :
+                if result is not False :
                     return result;
-
-# Exceptions here as windows admin rights on a folder across the search make it stop premeturely
-# to be looked for later as windows processes run by group
-# likely, the daemon would be run as admin.
             try :
-# We first try to find subfolders likely to host the target qnd stqrt with them
+                """
+                Exceptions here as windows admin rights on a folder across the search make it stop premeturely
+                to be looked for later as windows processes run by group
+                likely, the daemon would be run as admin.
+                We first try to find subfolders likely to host the target and start with them
+                """
                 for subfolderItem in os.listdir(dirname) :
                     if (os.path.isdir(os.path.join(dirname, subfolderItem)) and (os.access(os.path.join(dirname, subfolderItem), os.R_OK))) :
                         sublikelihood = self.__evalLikeliHood(os.path.join(dirname, subfolderItem), targetName)
                         if sublikelihood > LAMBDA :
                             result = self.__Crawldir(os.path.join(dirname, subfolderItem), targetName, localdepth, sublikelihood);
-                            if (result != False) :
+                            if result is not False :
                                 return result;
                 if (likelihood == LAMBDA) :
                     result = self.__EvalLocalFiles(dirname, targetName)
-                    if (result != False) :
+                    if result is not False :
                         return result;
             except :
                 pass
             try :
-# If the previous step has failed we try all subfolders excluding those previously tested
+                """
+                If the previous step has failed we try all subfolders excluding those previously tested
+                """
                 for subfolderItem in os.listdir(dirname) :
                     if (os.path.isdir(os.path.join(dirname, subfolderItem))) :
                         sublikelihood = self.__evalLikeliHood(os.path.join(dirname, subfolderItem), targetName)

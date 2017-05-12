@@ -1,7 +1,6 @@
 from daemon.Daemon import Daemon
 from daemon.Event import Event
 
-
 def main():
     print('Launching AVA...')
     daemon = Daemon()
