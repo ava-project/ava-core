@@ -1,3 +1,4 @@
+from os import path
 from threading import Thread
 from http.server import HTTPServer
 from server.HTTPRequestHandler import HTTPRequestHandler
@@ -71,16 +72,17 @@ class DaemonServer():
         res = requests.get(DaemonServer._base_url + '/plugins/' + request.url_vars['author'] + '/' + request.url_vars['plugin_name'] + '/download', auth=auth)
         if res.ok:
             download_url = res.json()['url']
-            download_folder = DaemonServer._daemon._config.get('plugin_folder_download') + '/'
-            DaemonServer.__download_file(download_folder + request.url_vars['plugin_name'], download_url, extension='.zip')
+            download_path = DaemonServer._daemon._config.get('plugin_folder_download')
+            download_path = DaemonServer._daemon._config.resolve_path_from_root(download_path, request.url_vars['plugin_name'])
+            DaemonServer.__download_file(download_path, download_url, extension='.zip')
         return res
 
     @staticmethod
     @HTTPRequestHandler.get('/plugins/:plugin_name/install')
     def get_install_plugin(request):
-        plugin_path = '../plugins_manager/demo/' + request.url_vars['plugin_name'] + '.zip'
-        DaemonServer._daemon.install_plugin(plugin_path)
+        plugin_path = path.join(DaemonServer._daemon._config.get('plugin_folder_download'), request.url_vars['plugin_name'] + '.zip')
         res = requests.Response()
+        DaemonServer._daemon.install_plugin(plugin_path)
         res.status_code = 200
         return res
 
@@ -88,8 +90,8 @@ class DaemonServer():
     @HTTPRequestHandler.delete('/plugins/:plugin_name')
     def delete_uninstall_plugin(request):
         plugin_name = request.url_vars['plugin_name']
-        DaemonServer._daemon.uninstall_plugin(plugin_name)
         res = requests.Response()
+        DaemonServer._daemon.uninstall_plugin(plugin_name)
         res.status_code = 200
         return res
 
@@ -97,25 +99,29 @@ class DaemonServer():
     @HTTPRequestHandler.get('/plugins/:plugin_name/enable')
     def get_enable_plugin(request):
         plugin_name = request.url_vars['plugin_name']
-        DaemonServer._daemon.enable_plugin(plugin_name)
         res = requests.Response()
-        res.status_code = 200
+        if DaemonServer._daemon.enable_plugin(plugin_name):
+            res.status_code = 200
+        else:
+            res.status_code = 400
         return res
 
     @staticmethod
     @HTTPRequestHandler.get('/plugins/:plugin_name/disable')
     def get_disable_plugin(request):
         plugin_name = request.url_vars['plugin_name']
-        DaemonServer._daemon.disable_plugin(plugin_name)
         res = requests.Response()
-        res.status_code = 200
+        if DaemonServer._daemon.disable_plugin(plugin_name):
+            res.status_code = 200
+        else:
+            res.status_code = 400
         return res
 
     @staticmethod
-    def __download_file(path, url, extension=''):
+    def __download_file(file_path, url, extension=''):
         auth = (DaemonServer._user['_email'], DaemonServer._user['_token'])
         res = requests.get(DaemonServer._base_url + url, auth=auth, stream=True)
-        with open(path + extension, 'wb') as dfile:
+        with open(file_path + extension, 'wb') as dfile:
             for chunk in res.iter_content(chunk_size=1024):
                 if chunk:
                     dfile.write(chunk)

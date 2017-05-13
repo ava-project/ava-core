@@ -49,3 +49,6 @@ class ConfigLoader():
             prop = self._file_loaded[key]
 
         return prop
+
+    def resolve_path_from_root(self, *path):
+        return os.path.normpath(os.path.join(self.root_path, *path))
