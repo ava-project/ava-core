@@ -7,7 +7,17 @@ import re
 ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 class firefox(AVAPlugin):
-    """docstring for FirefoxPlugin."""
+    """docstring for FirefoxPlugin.
+
+        example commande :
+
+        in AVA prompt :
+        firefox open youtube =====> open www.youtube.com
+        firefox type foo =====> search foo in youtube
+        firefox click Name of one of the videos =====> open the link to this videos
+        firefox maximize ====> maximize window
+
+    """
     def __init__(self, name="Firefox"):
         super(firefox, self).__init__(name)
         self.set_commands_list({**AVAPlugin._commands, **{\
@@ -22,6 +32,7 @@ class firefox(AVAPlugin):
 
         }})
         self._browser = webdriver.Firefox();
+        self._current_element = None;
 
     def list_commands(self, option="") :
         for c in self._commands :
@@ -100,6 +111,14 @@ class firefox(AVAPlugin):
         element = self.__locate_element_by_text(element_name)
         if element is not None :
             element.click()
+
+    def select_element(self, element_name) :
+
+        element = self.__locate_element_by_text(element_name)
+        if element is not None :
+            element.select()
+
+
 
 # f = FirefoxPlugin("firefox")
 # f.get_commands()["list"]()
