@@ -9,10 +9,10 @@ class git(object):
             'version': self.version,
         }
 
-    def log(self):
+    def log(self, decoy=''):
         subprocess.call(["git", "log"])
 
-    def version(self):
+    def version(self, decoy=''):
         subprocess.call(["git", "version"])
 
 
