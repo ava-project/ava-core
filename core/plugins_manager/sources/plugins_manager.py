@@ -1,4 +1,6 @@
-import os, importlib
+import os
+import importlib
+from plugins_manager.sources.AVAPlugin import AVAPlugin
 from avasdk.plugins.ioutils.utils import *
 from avasdk.exceptions import RuntimeError
 
@@ -194,7 +196,7 @@ class plugins_manager(object):
         return True, ""
 
 
-    def handle_python(self, plugin, command):
+    def handle_python(self, plugin, user_command):
         """
         Python handler to execute plugin's features
             @params:
@@ -206,14 +208,15 @@ class plugins_manager(object):
                     boolean: True of False whether an operation has been performed.
                     string: Status of the operation
         """
+        command = user_command.split(' ')
         if self.plugins_running.get(plugin) is None:
             self.plugins_running[plugin] = getattr(importlib.import_module("core.plugins_manager.plugins." + plugin + "." + plugin), plugin)()
 
-        if self.plugins_running[plugin].get_commands().get(command) is None:
-            return False, "The plugin '" + plugin + "' cannot handle the following command: " + command
+        if self.plugins_running[plugin].get_commands().get(command[0]) is None:
+            return False, "The plugin '" + plugin + "' cannot handle the following command: " + command[0]
 
         else:
-            self.plugins_running[plugin].get_commands()[command]()
+            self.plugins_running[plugin].get_commands()[command[0]](str(' '.join(command[1:])))
             return True, "Command correctly executed."
 
 

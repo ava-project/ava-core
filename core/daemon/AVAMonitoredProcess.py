@@ -24,17 +24,17 @@ class AVAMonitoredProcess(object):
 #        if not self._connection.isEmpty() :
         return self._connection.get(timeout=self._answer_timeout) if not self._connection.isEmpty() else False
 
-    def send(message) :
+    def send(message):
         self._connection.put(message)
 
-    def execute(command) :
+    def execute(command):
         args_received = self.get()
         result = "";
         try :
-            if args_received is not False :
+            if args_received is not False:
                 result = str(self._plugin.get_commands[command](args_received))
             else :
                 result = str(self._plugin.get_commands[command]())
-        except Exception as plugin_execution_error :
+        except Exception as plugin_execution_error:
             result += "[ --- ]" + str(plugin_execution_error)
         send(result);
