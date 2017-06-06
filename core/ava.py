@@ -1,6 +1,8 @@
 from daemon.Daemon import Daemon
 from daemon.Event import Event
 
+__version__ = "0.8"
+
 def main():
     print('Launching AVA...')
     daemon = Daemon()

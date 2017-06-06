@@ -26,9 +26,7 @@ class ConfigLoader():
             @type path: string
             @exception: OSError if the file can't be open
         """
-        full_path = self.root_path + os.sep + path \
-                    if self.root_path[-1] != os.sep \
-                    else self.root_path + path
+        full_path = self.resolve_path_from_root(path)
         with open(full_path) as ofile:
             self._file_loaded = json.load(ofile)
 
@@ -40,6 +38,7 @@ class ConfigLoader():
             @param path: path to the property
             @type path: string
             @exception: KeyError if the path to the property is incorrect
+            @return: The property
         """
         properties = path.split('/')
         prop = None
@@ -51,4 +50,12 @@ class ConfigLoader():
         return prop
 
     def resolve_path_from_root(self, *path):
+        """
+        Append the different path to the root path.
+
+            @param path: path to append
+            @type path: list of string
+            @return: The full path
+            @rtype: string
+        """
         return os.path.normpath(os.path.join(self.root_path, *path))

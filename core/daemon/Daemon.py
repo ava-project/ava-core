@@ -27,7 +27,7 @@ class Daemon(object):
         self._th = Thread(None, self.__run)
         self._cv = Condition()
         self._is_running = False
-        self._config = ConfigLoader(sys.path[1])
+        self._config = ConfigLoader(sys.path[0])
         self._config.load('settings.json')
         self._ds = DaemonServer(self, self._config.get('API_address'))
         self._file_crawler = FileCrawler(self._config.get('FileCrawler_preferences'))

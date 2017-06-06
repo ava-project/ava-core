@@ -1,0 +1,2 @@
+include *.md *.txt *.json
+include packages *.zip
