@@ -8,7 +8,7 @@ class ssh(object):
             'connect': self.connect,
         }
 
-    def connect(self):
+    def connect(self, command):
         subprocess.call(["ssh", "root@193.70.42.59"])
 
     def get_commands(self):
