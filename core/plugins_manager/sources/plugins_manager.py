@@ -18,13 +18,13 @@ class plugins_manager(object):
         self._plugins_running = {}
         self._plugins_disabled = []
         self._commands_for_a_specific_plugin = {}
-        self.__load_plugins()
+        self._load_plugins()
 
 
     #
     #  Private methods
     #
-    def __retrieve_plugins_name_and_files_extension(self, skip):
+    def _retrieve_plugins_name_and_files_extension(self, skip):
         """
         Handler for retrieving plugins names and files' extension
             @param:
@@ -33,7 +33,7 @@ class plugins_manager(object):
                 - raises an error if the specified directory does not exist.
         """
         if os.path.isdir(self._path) == False:
-            raise RuntimeError(__name__, self.__retrieve_plugins_name_and_files_extension.__name__, " Invalid path to the plugins' directory.")
+            raise RuntimeError(__name__, self._retrieve_plugins_name_and_files_extension.__name__, " Invalid path to the plugins' directory.")
 
         for directory in os.listdir(self._path):
             if self._plugins_list.get(directory) is not None:
@@ -45,12 +45,12 @@ class plugins_manager(object):
 
 
 
-    def __load_plugins(self):
+    def _load_plugins(self):
         """
         Loads every plugin and caches the data.
         """
         try:
-            self.__retrieve_plugins_name_and_files_extension("json")
+            self._retrieve_plugins_name_and_files_extension("json")
 
         except RuntimeError as err:
             print(format_output(err.args[0], err.args[1]), err.args[2])
@@ -66,7 +66,7 @@ class plugins_manager(object):
 
 
 
-    def __extract_commands(self, skip):
+    def _extract_commands(self, skip):
         """
         Extracts each command name and its phonetic equivalent for a specific plugin.
 
@@ -92,7 +92,9 @@ class plugins_manager(object):
         """
         try:
             unzip(path, self._path)
-            self.__load_plugins()
+            self._load_plugins()
+
+            # If the plugin need some external dependencies we will build them here
 
         except RuntimeError as err:
             print(format_output(err.args[0], err.args[1]), err.args[2])
@@ -176,13 +178,13 @@ class plugins_manager(object):
             return None
 
         if self._commands_for_a_specific_plugin.get('name') is not None and self.commands_for_a_specific_plugin['name'] == plugin:
-                return self.__extract_commands("name")
+                return self._extract_commands("name")
 
         self._commands_for_a_specific_plugin.clear()
         self._commands_for_a_specific_plugin['name'] = plugin
         for cmd in self._plugins_list[plugin]['commands']:
             self._commands_for_a_specific_plugin[cmd['name']] = cmd['phonetic']
-        return self.__extract_commands("name")
+        return self._extract_commands("name")
 
 
 
