@@ -1,31 +1,25 @@
 {
   "name":"git",
-  "description": "Tool to push/pull faster to a git repository",
+  "description": "Git plugin for AVA",
   "version": "0.0.1",
   "author": "tommy",
   "commands": [
     {
-      "name": "push",
-      "phonetic": "P UH Ch",
-      "exec": "git.py"
-    },
-    {
-      "name": "pull",
-      "phonetic": "P OO LEH",
-      "exec": "git.py"
-    },
-    {
       "name": "version",
       "phonetic": "V ERH SI ON",
-      "exec": "git.py"
+      "exec": "git.py",
+      "description": "Display the git version"
     },
     {
       "name": "log",
       "phonetic": "L UHG",
-      "exec": "git.py"
+      "exec": "git.py",
+      "description": "Display the log of a git repository"
     }
   ],
   "options": {
     "branch": "master"
-  }
+  },
+  "tags": ["git", "python"],
+  "build": false
 }
