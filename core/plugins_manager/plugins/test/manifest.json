@@ -9,5 +9,7 @@
       "phonetic": "DE BUG",
       "exec": "test.cpp"
     }
-  ]
+  ],
+  "tags": ["test"],
+  "build": false
 }
