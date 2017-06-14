@@ -1,0 +1,13 @@
+{
+  "name":"test",
+  "description": "debug",
+  "version": "0.0.1",
+  "author": "tommy",
+  "commands": [
+    {
+      "name": "debug",
+      "phonetic": "DE BUG",
+      "exec": "test.cpp"
+    }
+  ]
+}
