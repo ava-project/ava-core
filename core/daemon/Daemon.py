@@ -66,7 +66,6 @@ class Daemon(object):
         try:
             if self._builtin.exec_builtin(target) is False:
                 if len(target) >= 2:
-                    print(target)
                     plugin_manager_result = self._plugin_manager.run(target[0], str(' '.join(target[1:])))
                     if plugin_manager_result[0] is False:
                         print(plugin_manager_result[1])

@@ -13,8 +13,8 @@ class git(PythonModel):
         "version" : self.version, \
         }})
 
-    def log(self, decoy=''):
+    def log(self, command):
         subprocess.call(["git", "log"])
 
-    def version(self, decoy=''):
+    def version(self, command):
         subprocess.call(["git", "version"])
