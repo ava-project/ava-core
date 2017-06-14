@@ -1,6 +1,5 @@
 import os
 from .execution import *
-from plugins_manager.sources.AVAPlugin import AVAPlugin
 from avasdk.plugins.ioutils.utils import *
 from avasdk.exceptions import RuntimeError
 

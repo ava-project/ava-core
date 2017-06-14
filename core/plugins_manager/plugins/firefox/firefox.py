@@ -1,4 +1,4 @@
-from plugins_manager.sources.AVAPlugin import AVAPlugin
+from avasdk.plugins.python_model import PythonModel
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
@@ -6,7 +6,7 @@ import re
 
 ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-class firefox(AVAPlugin):
+class firefox(PythonModel):
     """docstring for FirefoxPlugin.
 
         example commande :
@@ -20,7 +20,7 @@ class firefox(AVAPlugin):
     """
     def __init__(self, name="Firefox"):
         super(firefox, self).__init__(name)
-        self.set_commands_list({**AVAPlugin._commands, **{\
+        self.set_commands_list({**PythonModel._commands, **{\
         "open" : self.web_search, \
         "type" : self.make_query, \
         "click" : self.click_element, \
