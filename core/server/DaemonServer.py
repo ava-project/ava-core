@@ -1,7 +1,6 @@
-from os import path
 from threading import Thread
 from http.server import HTTPServer
-from server.HTTPRequestHandler import HTTPRequestHandler
+from core.server.HTTPRequestHandler import HTTPRequestHandler
 import requests
 
 class DaemonServer():
@@ -125,7 +124,8 @@ class DaemonServer():
         Url param:
             plugin_name -> the plugin's name
         """
-        plugin_path = path.join(DaemonServer._daemon._config.get('plugin_folder_download'), request.url_vars['plugin_name'] + '.zip')
+        plugin_path = DaemonServer._daemon._config.get('plugin_folder_download')
+        plugin_path = DaemonServer._daemon._config.resolve_path_from_root(plugin_path, request.url_vars['plugin_name'] + '.zip')
         res = requests.Response()
         DaemonServer._daemon.install_plugin(plugin_path)
         res.status_code = 200

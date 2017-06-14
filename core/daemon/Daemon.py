@@ -2,10 +2,11 @@ import sys
 from threading import Thread, Condition
 from collections import deque
 from subprocess import Popen, PIPE
-from server.DaemonServer import DaemonServer
-from plugins_manager.sources.plugins_manager import plugins_manager
-from daemon.ConfigLoader import ConfigLoader
-from daemon.FileCrawler import FileCrawler
+from core.server.DaemonServer import DaemonServer
+from core.plugins_manager.sources.plugins_manager import plugins_manager
+from core.daemon.ConfigLoader import ConfigLoader
+from core.daemon.FileCrawler import FileCrawler
+from core.daemon.Builtin import Builtin
 
 # TODO: Error during import
 # from vocal_interpretor.STT_Engine import STT_Engine
@@ -16,6 +17,14 @@ class Daemon(object):
     The Daemon class is the main class from AVA.
     It contains the vocal interpretor, the plugin manager and the http server.
     """
+    def __new__(cls, *args, **kwargs):
+        """
+        Contructor - Singleton
+        """
+        if '_inst' not in vars(cls):
+            cls._inst = object.__new__(cls, *args, **kwargs)
+        return cls._inst
+
     def __init__(self):
         super(Daemon, self).__init__()
         """
@@ -32,6 +41,7 @@ class Daemon(object):
         self._ds = DaemonServer(self, self._config.get('API_address'))
         self._file_crawler = FileCrawler(self._config.get('FileCrawler_preferences'))
         self._plugin_manager = plugins_manager(self._config.resolve_path_from_root(self._config.get('plugin_folder_install')))
+        self._builtin = Builtin(self)
 
     def __run(self):
         """
@@ -54,20 +64,21 @@ class Daemon(object):
         event = self._event_queue.popleft()
         target = event.get_cmd().split(' ')
         try:
-            if len(target) >= 2:
-                print(target)
-                plugin_manager_result = self._plugin_manager.run(target[0], str(' '.join(target[1:])))
-                if plugin_manager_result[0] is False:
-                    print(plugin_manager_result[1])
-            else:
-                target = self._file_crawler.locateExecutablePath(event.get_cmd())
-                if target is not False:
-                    process = Popen(target, shell=True, stdout=PIPE)
-                    process.wait()
-                    out, err = process.communicate()
+            if self._builtin.exec_builtin(target) is False:
+                if len(target) >= 2:
+                    print(target)
+                    plugin_manager_result = self._plugin_manager.run(target[0], str(' '.join(target[1:])))
+                    if plugin_manager_result[0] is False:
+                        print(plugin_manager_result[1])
+                else:
+                    target = self._file_crawler.locateExecutablePath(event.get_cmd())
+                    if target is not False:
+                        process = Popen(target, shell=True, stdout=PIPE)
+                        process.wait()
+                        out, err = process.communicate()
 
         except RuntimeError as exec_error:
-            print("Error on Plugin manager call : " + exec_error)
+            print("Error on Plugin manager call : " + str(exec_error))
         except BaseException as e:
             print("Standard Exception : " + str(e))
 
