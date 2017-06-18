@@ -2,14 +2,14 @@
 #include <string>
 
 
-std::string hello(char *what) {
+std::string say_hello(char *what) {
   std::string hi("Hello, ");
 
   hi += what;
   return hi;
 }
 
-static PyObject * hello_wrapper(PyObject * self, PyObject * args)
+static PyObject * hello(PyObject * self, PyObject * args)
 {
   char *input;
 
@@ -17,11 +17,11 @@ static PyObject * hello_wrapper(PyObject * self, PyObject * args)
     return NULL;
   }
 
-  return Py_BuildValue("s", hello(input));
+  return Py_BuildValue("s", say_hello(input));
 }
 
 static PyMethodDef HelloMethods[] = {
- { "hello_wrapper", (PyCFunction)hello_wrapper, METH_VARARGS, "Say Hello" },
+ { "hello", (PyCFunction)hello, METH_VARARGS, "Say Hello" },
  { NULL, NULL, 0, NULL }
 };
 

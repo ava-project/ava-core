@@ -1,8 +1,5 @@
 import pip
 
-def install(package):
-    pip.main(['install', package])
-
 def install_from_requirements(path, plugin):
     print(path)
     print(plugin)

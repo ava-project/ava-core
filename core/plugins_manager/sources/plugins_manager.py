@@ -5,7 +5,8 @@ from avasdk.plugins.ioutils.utils import *
 from avasdk.exceptions import RuntimeError
 
 class plugins_manager(object):
-    """ AVA plugins-manager """
+    """ AVA plugins manager
+    """
 
     def __init__(self, path):
         """
@@ -40,6 +41,8 @@ class plugins_manager(object):
                 continue
             if os.path.isdir(self._path + '/' + directory) == True:
                 for file in os.listdir(self._path + '/' + directory):
+                    if file == 'setup.py':
+                        continue
                     if file.find(".") > 0 and file[file.find(".") + 1:] not in skip:
                         self._plugins_list[directory] = {'lang': file[file.find(".") + 1:]}
 
@@ -202,6 +205,8 @@ class plugins_manager(object):
                     - boolean: True of False whether an operation has been performed.
                     - string: Status of the operation
         """
+        print(self._plugins_list)
+
         if self._plugins_list.get(plugin) is None:
             return False, "No plugin named '" + plugin + "' found."
 

@@ -11,5 +11,5 @@
     }
   ],
   "tags": ["test", "hello", "world"],
-  "build": false
+  "build": true
 }
