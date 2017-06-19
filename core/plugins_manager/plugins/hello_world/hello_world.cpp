@@ -1,6 +1,5 @@
 #include <Python.h>
 #include <iostream>
-// #include <functional>
 
 void *say_hello(char *what) {
   std::cout << "Hello, ";
@@ -9,7 +8,7 @@ void *say_hello(char *what) {
   return what;
 }
 
-static PyObject *hello(PyObject * self, PyObject * args)
+static PyObject *hello(PyObject *self, PyObject *args)
 {
   char *input;
 
