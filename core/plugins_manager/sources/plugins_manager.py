@@ -53,7 +53,7 @@ class plugins_manager(object):
         Loads every plugin and caches the data.
         """
         try:
-            self._retrieve_plugins_name_and_files_extension(['json', 'txt'])
+            self._retrieve_plugins_name_and_files_extension(['json', 'txt', 'md'])
 
         except RuntimeError as err:
             print(format_output(err.args[0], err.args[1]), err.args[2])
