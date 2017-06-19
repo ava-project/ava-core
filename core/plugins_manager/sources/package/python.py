@@ -1,7 +1,8 @@
-import pip
+import pip, json
 
-def install_from_requirements(path, plugin):
-    print(path)
-    print(plugin)
+def install_from_requirements(plugin):
 
-    pip.main(['install', '-r', path + plugin['name'] + "/requirements.txt"])
+    with open('settings.json') as json_file:
+        conf = json.load(json_file)
+
+    pip.main(['install', '-r', conf['plugin_folder_install'] + '/' + plugin['name'] + "/requirements.txt"])

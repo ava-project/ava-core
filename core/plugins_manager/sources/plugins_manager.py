@@ -135,7 +135,6 @@ class plugins_manager(object):
                 - Plugins are enabled by default. Use this method if you want to
                 enable a plugin which has been disabled by the 'disable' method.
         """
-
         if self._plugins_list.get(plugin) is None:
             return False
         if plugin in self._plugins_disabled:
@@ -151,7 +150,6 @@ class plugins_manager(object):
             @param:
                 - plugin: string(the plugin name)
         """
-
         if self._plugins_list.get(plugin) is not None:
             if self._plugins_running.get(plugin) is not None:
                 self._plugins_running.pop(plugin, None)
@@ -160,7 +158,6 @@ class plugins_manager(object):
             else:
                 self._plugins_disabled.append(plugin)
             return True
-
         return False
 
 
@@ -205,8 +202,6 @@ class plugins_manager(object):
                     - boolean: True of False whether an operation has been performed.
                     - string: Status of the operation
         """
-        print(self._plugins_list)
-
         if self._plugins_list.get(plugin) is None:
             return False, "No plugin named '" + plugin + "' found."
 

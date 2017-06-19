@@ -1,3 +1,2 @@
-def install_go_packages(path, plugin):
-    print(path)
+def install_go_packages(plugin):
     print(plugin)

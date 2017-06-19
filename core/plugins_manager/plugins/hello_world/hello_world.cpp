@@ -3,13 +3,10 @@
 
 
 std::string say_hello(char *what) {
-  std::string hi("Hello, ");
-
-  hi += what;
-  return hi;
+  return std::string("Hello, ") += what;
 }
 
-static PyObject * hello(PyObject * self, PyObject * args)
+static PyObject *hello(PyObject * self, PyObject * args)
 {
   char *input;
 
@@ -25,16 +22,16 @@ static PyMethodDef HelloMethods[] = {
  { NULL, NULL, 0, NULL }
 };
 
-static struct PyModuleDef Hello_world =
+static struct PyModuleDef hello_world =
 {
     PyModuleDef_HEAD_INIT,
-    "Hello_world",
+    "hello_world",
     "",
     -1,
     HelloMethods
 };
 
-PyMODINIT_FUNC PyInit_Hello_world(void)
+PyMODINIT_FUNC PyInit_hello_world(void)
 {
-    return PyModule_Create(&Hello_world);
+    return PyModule_Create(&hello_world);
 }
