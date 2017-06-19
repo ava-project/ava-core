@@ -1,9 +1,12 @@
 #include <Python.h>
-#include <string>
+#include <iostream>
+// #include <functional>
 
-
-std::string say_hello(char *what) {
-  return std::string("Hello, ") += what;
+void *say_hello(char *what) {
+  std::cout << "Hello, ";
+  std::cout << what;
+  std::cout << " :)\n";
+  return what;
 }
 
 static PyObject *hello(PyObject * self, PyObject * args)
@@ -14,7 +17,7 @@ static PyObject *hello(PyObject * self, PyObject * args)
     return NULL;
   }
 
-  return Py_BuildValue("s", say_hello(input));
+  return Py_BuildValue("O", say_hello(input));
 }
 
 static PyMethodDef HelloMethods[] = {
