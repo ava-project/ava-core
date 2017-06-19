@@ -1,10 +1,12 @@
 import os
+from .package import *
 from .execution import *
 from avasdk.plugins.ioutils.utils import *
 from avasdk.exceptions import RuntimeError
 
 class plugins_manager(object):
-    """ AVA plugins-manager """
+    """ AVA plugins manager
+    """
 
     def __init__(self, path):
         """
@@ -39,7 +41,9 @@ class plugins_manager(object):
                 continue
             if os.path.isdir(self._path + '/' + directory) == True:
                 for file in os.listdir(self._path + '/' + directory):
-                    if file.find(".") > 0 and file[file.find(".") + 1:] != skip:
+                    if file == 'setup.py':
+                        continue
+                    if file.find(".") > 0 and file[file.find(".") + 1:] not in skip:
                         self._plugins_list[directory] = {'lang': file[file.find(".") + 1:]}
 
 
@@ -49,7 +53,7 @@ class plugins_manager(object):
         Loads every plugin and caches the data.
         """
         try:
-            self._retrieve_plugins_name_and_files_extension("json")
+            self._retrieve_plugins_name_and_files_extension(['json', 'txt'])
 
         except RuntimeError as err:
             print(format_output(err.args[0], err.args[1]), err.args[2])
@@ -59,6 +63,8 @@ class plugins_manager(object):
                 if len(self._plugins_list[key]) > 1:
                     continue
                 parse_json_file_to_dictionary(self._path + '/' + key, self._plugins_list[key])
+                if self._plugins_list[key]['build'] == True:
+                    install_and_manage_packages(self._plugins_list[key])
 
         except RuntimeError as err:
             print(format_output(err.args[0], err.args[1]), err.args[2])
@@ -92,8 +98,6 @@ class plugins_manager(object):
         try:
             unzip(path, self._path)
             self._load_plugins()
-
-            # If the plugin need some external dependencies we will build them here
 
         except RuntimeError as err:
             print(format_output(err.args[0], err.args[1]), err.args[2])
@@ -131,7 +135,6 @@ class plugins_manager(object):
                 - Plugins are enabled by default. Use this method if you want to
                 enable a plugin which has been disabled by the 'disable' method.
         """
-
         if self._plugins_list.get(plugin) is None:
             return False
         if plugin in self._plugins_disabled:
@@ -147,7 +150,6 @@ class plugins_manager(object):
             @param:
                 - plugin: string(the plugin name)
         """
-
         if self._plugins_list.get(plugin) is not None:
             if self._plugins_running.get(plugin) is not None:
                 self._plugins_running.pop(plugin, None)
@@ -156,7 +158,6 @@ class plugins_manager(object):
             else:
                 self._plugins_disabled.append(plugin)
             return True
-
         return False
 
 

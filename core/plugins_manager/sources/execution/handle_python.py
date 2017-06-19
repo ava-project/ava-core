@@ -2,7 +2,7 @@ import importlib
 
 def handle_python(plugin, user_command, plugins_running):
     """
-    Python handler to execute plugin's features
+    Handler to execute the features of a plugin written in Python.
         @params:
           - plugin: string (plugin name)
           - command: string (the command to execute)

@@ -1,0 +1,15 @@
+{
+  "name":"hello_world",
+  "description": "Say Hello",
+  "version": "0.0.1",
+  "author": "tommy",
+  "commands": [
+    {
+      "name": "hello",
+      "phonetic": "Hello",
+      "exec": "hello_world.cpp"
+    }
+  ],
+  "tags": ["test", "hello", "world"],
+  "build": true
+}
