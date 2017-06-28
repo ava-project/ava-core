@@ -17,8 +17,10 @@ def main():
             daemon.add_event(Event(inp, False, 0))
         except KeyboardInterrupt:
             daemon.stop()
+            break
         except EOFError:
             daemon.stop()
+            break
 
 if __name__ == "__main__":
     main()
