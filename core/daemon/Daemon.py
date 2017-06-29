@@ -4,7 +4,7 @@ from queue import Queue
 from subprocess import Popen, PIPE
 from core.vocal_interpretor.interpretor import Interpretor
 from core.server.DaemonServer import DaemonServer
-from core.plugins_manager.sources.plugins_manager import plugins_manager
+from core.plugins_manager.sources.plugins_manager import PluginsManager
 from core.daemon.ConfigLoader import ConfigLoader
 from core.daemon.FileCrawler import FileCrawler
 from core.daemon.Builtin import Builtin
@@ -38,7 +38,7 @@ class Daemon(object):
         self._interpretor = Interpretor(self)
         self._ds = DaemonServer(self, self._config.get('API_address'))
         self._file_crawler = FileCrawler(self._config.get('FileCrawler_preferences'))
-        self._plugin_manager = plugins_manager(self._config.resolve_path_from_root(self._config.get('plugin_folder_install')))
+        self._plugin_manager = PluginsManager(self._config.resolve_path_from_root(self._config.get('plugin_folder_install')))
         self._builtin = Builtin(self)
 
     def __run(self):
