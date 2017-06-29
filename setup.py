@@ -1,20 +1,27 @@
 # -*- coding: utf-8 -*-
 
+import re
+
 from setuptools import setup, find_packages
 
-from core import ava
+version = re.search(
+    '^__version__\s*=\s*"(.*)"',
+    open('core/version.py').read(),
+    re.M
+    ).group(1)
 
 setup(
 
     name='avacore',
-    version=ava.__version__,
+    version=version,
     packages=find_packages(),
     author='AVA Project',
     author_email='ava_2018@labeip.epitech.eu',
     description='The daemon of the AVA Project',
     long_description=open('README.md').read(),
     install_requires=[
-        'flask==0.12'
+        'flask==0.12',
+        'avasdk',
         'requests'
     ],
     include_package_data=True,
@@ -30,7 +37,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'avad = core.ava:main',
+            'ava = core.ava:main',
         ],
     },
 )

@@ -4,18 +4,10 @@
 
 #### Unix enivronment
 
-  - In order to install the dependencies, please run the following command:
+  - In order to install the dependencies, please run the following command in your shell:
 
 ```bash
-    sudo pip install avasdk
-```
-
-#### Windows enivronment
-
-  - Run your shell as administrator and type the following command:
-
-```bash
-    pip install avasdk
+pip install --editable .
 ```
 
 ## How to create my own plugin - Guidelines
