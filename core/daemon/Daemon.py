@@ -1,16 +1,14 @@
 import sys
-from threading import Thread, Condition
-from collections import deque
+from threading import Thread
+from queue import Queue
 from subprocess import Popen, PIPE
+from core.vocal_interpretor.interpretor import Interpretor
 from core.server.DaemonServer import DaemonServer
-from core.plugins_manager.sources.plugins_manager import plugins_manager
+from core.plugins_manager.sources.plugins_manager import PluginsManager
 from core.daemon.ConfigLoader import ConfigLoader
 from core.daemon.FileCrawler import FileCrawler
 from core.daemon.Builtin import Builtin
 
-# TODO: Error during import
-# from vocal_interpretor.STT_Engine import STT_Engine
-# from vocal_interpretor.TTS_Engine import TTS_Engine
 
 class Daemon(object):
     """
@@ -32,15 +30,15 @@ class Daemon(object):
 
             no param
         """
-        self._event_queue = deque([])
-        self._th = Thread(None, self.__run)
-        self._cv = Condition()
         self._is_running = False
+        self._event_queue = Queue()
+        self._th = Thread(None, self.__run)
         self._config = ConfigLoader(sys.path[0])
         self._config.load('settings.json')
+        self._interpretor = Interpretor(self)
         self._ds = DaemonServer(self, self._config.get('API_address'))
         self._file_crawler = FileCrawler(self._config.get('FileCrawler_preferences'))
-        self._plugin_manager = plugins_manager(self._config.resolve_path_from_root(self._config.get('plugin_folder_install')))
+        self._plugin_manager = PluginsManager(self._config.resolve_path_from_root(self._config.get('plugin_folder_install')))
         self._builtin = Builtin(self)
 
     def __run(self):
@@ -49,19 +47,18 @@ class Daemon(object):
         This method wait until it have an event to process
         """
         while self._is_running:
-            while len(self._event_queue) != 0:
-                self.__exec()
-            else:
-                self._cv.acquire()
-                self._cv.wait()
+            event = self._event_queue.get(block=True)
+            if event is None:
+                break
+            self.__exec(event)
+            self._event_queue.task_done()
 
-    def __exec(self):
+    def __exec(self, event):
         """
         Private method
         This method execute an event and remove it from the event queue
         """
 
-        event = self._event_queue.popleft()
         target = event.get_cmd().split(' ')
         try:
             if self._builtin.exec_builtin(target) is False:
@@ -89,16 +86,15 @@ class Daemon(object):
         self._is_running = True
         self._th.start()
         self._ds.run()
+        self._interpretor.run()
 
     def stop(self):
         """
         Stop the daemon and the http server
         """
         self._is_running = False
-        self._cv.acquire()
-        self._cv.notify()
-        self._cv.release()
         self._ds.stop()
+        self._interpretor.stop()
 
     def add_event(self, event):
         """
@@ -107,10 +103,7 @@ class Daemon(object):
             @param event: the event to add to the queue
             @type event: Event
         """
-        self._cv.acquire()
-        self._event_queue.append(event)
-        self._cv.notify()
-        self._cv.release()
+        self._event_queue.put_nowait(event)
 
     def install_plugin(self, file_path):
         """

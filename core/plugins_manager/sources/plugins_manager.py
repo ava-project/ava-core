@@ -4,7 +4,7 @@ from .execution import *
 from avasdk.plugins.ioutils.utils import *
 from avasdk.exceptions import RuntimeError
 
-class plugins_manager(object):
+class PluginsManager(object):
     """ AVA plugins manager
     """
 
