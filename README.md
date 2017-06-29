@@ -2,9 +2,7 @@
 
 ## Install
 
-#### Unix enivronment
-
-  - In order to install the dependencies, please run the following command in your shell:
+Run this command in your shell:
 
 ```bash
 pip install --editable .
