@@ -1,0 +1,15 @@
+{
+  "name":"ssh",
+  "description": "SSH plugin for AVA",
+  "version": "0.0.1",
+  "author": "tommy",
+  "source": "ssh.py",
+  "commands": [
+    {
+      "name": "connect",
+      "phonetic": "CO NE KT",
+      "description": "command to log to my own server"
+    }
+  ],
+  "tags": ["ssh", "python"]
+}

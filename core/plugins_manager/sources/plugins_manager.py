@@ -4,6 +4,9 @@ from .execution import *
 from avasdk.plugins.ioutils.utils import *
 from avasdk.exceptions import RuntimeError
 
+def format_output(s1, s2):
+    return s1 + ' ' + s2
+
 class PluginsManager(object):
     """ AVA plugins manager
     """
@@ -62,8 +65,10 @@ class PluginsManager(object):
             for key, value in self._plugins_list.items():
                 if len(self._plugins_list[key]) > 1:
                     continue
-                parse_json_file_to_dictionary(self._path + '/' + key, self._plugins_list[key])
-                if self._plugins_list[key]['build'] == True:
+                load_manifest_to_dictionary(self._path + '/' + key, self._plugins_list[key])
+                # if self._plugins_list[key]['build'] == True:
+                #     install_and_manage_packages(self._plugins_list[key])
+                if 'build' in self._plugins_list[key] and self._plugins_list[key]['build'] == True:
                     install_and_manage_packages(self._plugins_list[key])
 
         except RuntimeError as err:
